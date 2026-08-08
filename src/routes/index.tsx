@@ -1,0 +1,703 @@
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { FileText, Instagram, Mic, Video, X, Youtube } from "lucide-react";
+
+const assetPath = (path: string) => `${import.meta.env.BASE_URL}${path}`;
+
+const HERO_IMAGE = assetPath("media/bamdad-esmaili.webp");
+const HERO_BACKGROUND = assetPath("hero.png");
+const CONTACT_BACKGROUND = assetPath("journalist-studio-hero.png");
+
+const skills = [
+  { label: "TV & Medien", value: 95 },
+  { label: "Politische Analyse", value: 93 },
+  { label: "Migration & Integration", value: 96 },
+  { label: "Live & Moderation", value: 94 },
+];
+
+const services = [
+  {
+    n: "01",
+    title: "Journalismus",
+    text: "Reportagen, Interviews und Analysen zu Politik, Gesellschaft, Migration und internationalem Zeitgeschehen.",
+  },
+  {
+    n: "02",
+    title: "Dokumentationen",
+    text: "Dokumentarische Formate über Menschen, Flucht, Exil, Integration und die Realität hinter politischen Entwicklungen.",
+  },
+  {
+    n: "03",
+    title: "Moderation & Live",
+    text: "Live-Sendungen, Gespräche und aktuelle Einordnungen für TV, Onlineformate und deutsch-persische Communities.",
+  },
+];
+
+const works = [
+  {
+    title: "Bildergalerie",
+    cat: "Feature",
+    img: assetPath("media/gallery-11.jpg"),
+  },
+  {
+    title: "Migration & Integration",
+    cat: "Reportage",
+    img: assetPath("media/migration-integration.jpeg"),
+  },
+  {
+    title: "TV",
+    cat: "Sendung",
+    img: HERO_IMAGE,
+  },
+  {
+    title: "Radio",
+    cat: "Hörfunk",
+    img: assetPath("media/radio.jpg"),
+  },
+];
+
+const timeline = [
+  {
+    when: "Seit den 1990er-Jahren",
+    role: "Freier Journalist, Reporter & Moderator",
+    place: "Radio • TV • Online",
+    text: "Journalistische Arbeit für Hörfunk, Fernsehen und digitale Formate mit Fokus auf gesellschaftliche, politische und kulturelle Themen.",
+  },
+  {
+    when: "Seit vielen Jahren",
+    role: "Reporter & Autor",
+    place: "WDR • Deutsche Welle • Internationale Medien",
+    text: "Reportagen, Beiträge, Interviews und Moderationen zu Migration, Integration und politischen Entwicklungen in Deutschland und Europa.",
+  },
+  {
+    when: "Seit 2015",
+    role: "Internationale Reportagen & Dokumentationen",
+    place: "Europa • Naher Osten • Migration",
+    text: "Begleitung von Fluchtbewegungen aus Iran und Afghanistan sowie Reportagen über Exil, Integration und Schicksale entlang internationaler Routen.",
+  },
+];
+
+const focus = [
+  {
+    title: "Deutsch-persische Formate",
+    place: "WDRforyou",
+    text: "Beiträge und Moderationen auf Deutsch und Persisch für Geflüchtete, Migranten und internationale Communities.",
+  },
+  {
+    title: "Internationaler Journalismus",
+    place: "Migration • Gesellschaft • Politik",
+    text: "Berichterstattung über Entwicklungen im Iran, in Deutschland und innerhalb der iranischen Diaspora.",
+  },
+  {
+    title: "Persönlicher Hintergrund",
+    place: "Exil & Teilhabe",
+    text: "Geboren in Teheran, während des Iran-Irak-Krieges selbst nach Deutschland geflüchtet — eine Erfahrung, die seinen Blick bis heute prägt.",
+  },
+];
+
+const stats = [
+  { value: "30+", label: "Jahre im Journalismus" },
+  { value: "3", label: "Radio • TV • Online" },
+  { value: "1000+", label: "Beiträge & Interviews" },
+  { value: "20+", label: "Länder bereist" },
+];
+
+const topics = [
+  {
+    title: "Iran & Diaspora",
+    img: assetPath("media/iran-diaspora.jpg"),
+    text: "Politische und gesellschaftliche Entwicklungen im Iran und das Leben der Diaspora in Europa.",
+  },
+  {
+    title: "Politik & Gesellschaft",
+    img: assetPath("media/politics.png"),
+    text: "Einordnungen zu Asylpolitik, Aufenthaltsrecht und den Debatten, die Deutschland bewegen.",
+  },
+  {
+    title: "Migration & Integration",
+    img: assetPath("media/migration-integration.jpeg"),
+    text: "Geschichten von Flucht, Ankommen und Teilhabe — entlang der Routen und danach.",
+  },
+];
+
+const nav = [
+  { href: "#ueber", label: "Über" },
+  { href: "#arbeit", label: "Arbeiten" },
+  { href: "#werdegang", label: "Werdegang" },
+  { href: "#themen", label: "Themen" },
+  { href: "#kontakt", label: "Kontakt" },
+];
+
+const socialLinks = [
+  { label: "YouTube", href: "https://www.youtube.com/@BTalks-Bamdad", Icon: Youtube, hasMenu: true },
+  { label: "X", href: "https://x.com/besmaili", Icon: X },
+  { label: "Instagram", href: "https://www.instagram.com/bamdad_esmaili/?hl=de", Icon: Instagram },
+];
+
+const youtubeChannels = [
+  { label: "YouTube Deutsch", href: "https://www.youtube.com/@BTalks-Bamdad" },
+  { label: "YouTube Persisch", href: "https://www.youtube.com/@besmaili" },
+];
+
+const heroHighlights = [
+  { title: "TV-Journalist", text: "WDR • DW • YouTube", Icon: Video },
+  { title: "Dokumentation", text: "Naher Osten • Europa", Icon: FileText },
+  { title: "Live-Berichte", text: "Politik • Gesellschaft • Migration", Icon: Mic },
+];
+
+function Index() {
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+          <a href="#top" className="font-display text-lg tracking-tight">
+            Bamdad <span className="text-primary">Esmaili</span>
+          </a>
+          <nav className="hidden gap-8 md:flex">
+            {nav.map((i) => (
+              <a
+                key={i.href}
+                href={i.href}
+                className="label-eyebrow transition-colors hover:text-foreground"
+              >
+                {i.label}
+              </a>
+            ))}
+          </nav>
+        </div>
+      </header>
+      <SocialRail />
+
+      <main id="top">
+        {/* Hero */}
+        <section className="relative min-h-[calc(100svh-73px)] overflow-hidden">
+          <img
+            src={HERO_BACKGROUND}
+            alt=""
+            aria-hidden
+            className="absolute inset-0 h-full w-full object-cover object-center"
+          />
+          <div
+            className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/48 via-background/10 via-42% to-background/20"
+            aria-hidden
+          />
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-72 bg-gradient-to-t from-background/82 via-background/30 to-transparent"
+            aria-hidden
+          />
+          <div className="relative z-20 mx-auto flex min-h-[calc(100svh-73px)] max-w-6xl items-center px-6 py-24 md:py-32">
+            <div className="max-w-2xl">
+              <p className="label-eyebrow text-primary">Journalist · Reporter · Moderator</p>
+              <h1 className="mt-6 text-5xl leading-[0.95] tracking-tight drop-shadow-2xl sm:text-7xl md:text-8xl lg:text-[6.5rem]">
+                Ich bin
+                <br />
+                <span className="italic text-primary">Bamdad</span> Esmaili
+              </h1>
+              <p className="mt-8 max-w-xl text-base leading-relaxed text-foreground/78">
+                Deutsch-iranischer Journalist. Seit den 1990er-Jahren zwischen Redaktion, Straße und
+                Fluchtroute — für WDR, Deutsche Welle und eigene Formate.
+              </p>
+              <div className="mt-10 flex flex-wrap gap-3">
+                <a
+                  href="#arbeit"
+                  className="rounded-sm bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+                >
+                  Arbeiten ansehen
+                </a>
+                <a
+                  href="#kontakt"
+                  className="rounded-sm border border-white/20 bg-background/25 px-6 py-3 text-sm font-medium backdrop-blur transition-colors hover:bg-secondary"
+                >
+                  Kontakt
+                </a>
+              </div>
+              <SocialLinks className="mt-8 lg:hidden" />
+            </div>
+          </div>
+          <div className="relative z-20 mx-auto grid max-w-6xl grid-cols-1 border-t border-white/18 px-6 sm:grid-cols-3">
+            {heroHighlights.map(({ title, text, Icon }) => (
+              <div
+                key={title}
+                className="flex items-center gap-5 border-white/14 py-7 sm:border-l sm:px-8 first:sm:border-l-0"
+              >
+                <Icon className="h-8 w-8 shrink-0 text-primary" aria-hidden />
+                <div>
+                  <p className="text-sm font-medium">{title}</p>
+                  <p className="mt-1 text-sm text-foreground/68">{text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Über */}
+        <section id="ueber" className="mx-auto max-w-6xl px-6 py-24">
+          <p className="label-eyebrow">Über</p>
+          <div className="mt-8 grid gap-14 md:grid-cols-[1.2fr_0.8fr]">
+            <div className="space-y-6 text-muted-foreground">
+              <h2 className="text-3xl leading-tight text-foreground sm:text-4xl">
+                Journalismus beginnt dort, wo Schlagzeilen enden.
+              </h2>
+              <p className="leading-relaxed">
+                Bamdad Esmaili ist deutsch-iranischer Journalist, Reporter und Moderator. In der
+                iranischen Community wird er oft als einer der meistgefolgten iranischen
+                Journalisten in Deutschland bezeichnet — auch weil er seit Jahren in engem täglichem
+                Austausch mit der Community steht und politische, gesellschaftliche und kulturelle
+                Entwicklungen im Iran sowie die Lebensrealität von Iranern und Afghanen in
+                Deutschland kontinuierlich begleitet und journalistisch einordnet.
+              </p>
+              <p className="leading-relaxed">
+                Seit den 1990er-Jahren arbeitet er für Radio, Fernsehen und Onlineformate, unter
+                anderem für den WDR, die Deutsche Welle sowie weitere öffentlich-rechtliche und
+                internationale Medien. Neben seiner Arbeit für klassische Medien berichtet er
+                regelmäßig auf seinem eigenen YouTube-Kanal über aktuelle Entwicklungen im Iran, die
+                iranische Diaspora, Migration, Integration sowie gesellschaftliche und politische
+                Themen in Deutschland und Europa.
+              </p>
+              <p className="leading-relaxed">
+                Seit 2015 berichtet er intensiv über die Fluchtbewegungen aus dem Iran und
+                Afghanistan. In zahlreichen Reportagen, Livesendungen und Dokumentationen begleitet
+                er Menschen auf ihrem Weg nach Europa und beim Ankommen in Deutschland. Dafür war er
+                unter anderem in Flüchtlingslagern und entlang wichtiger Fluchtrouten in
+                Griechenland, Italien, Frankreich, Deutschland, England sowie entlang der
+                Balkanroute unterwegs. Seine Arbeiten beschäftigen sich mit Asylpolitik,
+                Integration, Visa- und Aufenthaltsfragen, aber auch mit persönlichen Geschichten von
+                Hoffnung, Verlust und Neuanfang.
+              </p>
+              <p className="leading-relaxed">
+                Ein besonderer Fokus seiner Arbeit liegt auf deutsch-persischen Formaten und der
+                journalistischen Vermittlung zwischen unterschiedlichen Lebensrealitäten. Für das
+                WDR-Format „WDRforyou“ berichtet er seit vielen Jahren auf Deutsch und Persisch über
+                Themen, die Geflüchtete und Migranten direkt betreffen.
+              </p>
+              <p className="leading-relaxed">
+                Bamdad Esmaili wurde in Teheran geboren und kam während des Iran-Irak-Krieges
+                selbst als Geflüchteter nach Deutschland. Diese persönliche Erfahrung prägt bis
+                heute seine journalistische Arbeit und seinen Blick auf Migration, Exil und
+                gesellschaftliche Teilhabe.
+              </p>
+            </div>
+            <div className="space-y-6">
+              {skills.map((s) => (
+                <div key={s.label}>
+                  <div className="flex items-baseline justify-between">
+                    <span className="text-sm">{s.label}</span>
+                    <span className="font-display text-lg text-primary">{s.value}%</span>
+                  </div>
+                  <div className="mt-2 h-px w-full bg-border">
+                    <div className="h-px bg-primary" style={{ width: `${s.value}%` }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <figure className="mt-20 border-l-2 border-primary pl-6 md:pl-10">
+            <blockquote className="font-display text-2xl italic leading-snug sm:text-3xl">
+              „Wahrer Journalismus beginnt dort, wo Schlagzeilen enden — in den Lebensrealitäten,
+              Hoffnungen, Konflikten und unerzählten Geschichten echter Menschen jenseits von
+              Grenzen, Kulturen und politischen Krisen."
+            </blockquote>
+            <figcaption className="mt-4 label-eyebrow">— Bamdad Esmaili</figcaption>
+          </figure>
+        </section>
+
+        {/* Was ich tue */}
+        <section className="border-y border-border bg-card/40">
+          <div className="mx-auto max-w-6xl px-6 py-24">
+            <p className="label-eyebrow">Was ich tue</p>
+            <div className="mt-10 grid gap-px bg-border sm:grid-cols-3">
+              {services.map((s) => (
+                <article
+                  key={s.n}
+                  className="hover-lift border border-transparent bg-background p-8"
+                >
+                  <span className="font-display text-3xl text-primary">{s.n}</span>
+                  <h3 className="mt-4 text-2xl">{s.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{s.text}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Arbeiten */}
+        <section id="arbeit" className="mx-auto max-w-6xl px-6 py-24">
+          <div className="flex items-end justify-between">
+            <p className="label-eyebrow">Ausgewählte Arbeiten</p>
+            <span className="label-eyebrow">04</span>
+          </div>
+          <div className="mt-10 grid gap-6 sm:grid-cols-2">
+            {works.map((w, i) => (
+              <article
+                key={w.title}
+                className={`hover-lift group overflow-hidden rounded-sm border border-border ${
+                  i % 3 === 0 ? "sm:col-span-2" : ""
+                }`}
+              >
+                <div className="overflow-hidden">
+                  <img
+                    src={w.img}
+                    alt={w.title}
+                    loading="lazy"
+                    className={`w-full object-cover grayscale transition-all duration-700 group-hover:scale-[1.03] group-hover:grayscale-0 ${
+                      i % 3 === 0 ? "aspect-[21/9]" : "aspect-[4/3]"
+                    }`}
+                  />
+                </div>
+                <div className="flex items-baseline justify-between px-6 py-5">
+                  <h3 className="text-xl">{w.title}</h3>
+                  <span className="label-eyebrow">{w.cat}</span>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {/* Werdegang */}
+        <section id="werdegang" className="border-t border-border">
+          <div className="mx-auto max-w-6xl px-6 py-24">
+            <p className="label-eyebrow">Beruflicher Werdegang</p>
+            <div className="mt-10 grid gap-16 md:grid-cols-2">
+              <div>
+                <h2 className="text-3xl">Erfahrung</h2>
+                <ol className="mt-8 space-y-10 border-l border-border pl-8">
+                  {timeline.map((t) => (
+                    <li key={t.role} className="relative">
+                      <span className="absolute -left-[2.19rem] top-2 h-2 w-2 rounded-full bg-primary" />
+                      <p className="label-eyebrow">{t.when}</p>
+                      <h3 className="mt-2 text-xl">{t.role}</h3>
+                      <p className="text-sm text-primary">{t.place}</p>
+                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t.text}</p>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+              <div>
+                <h2 className="text-3xl">Schwerpunkte</h2>
+                <div className="mt-8 space-y-6">
+                  {focus.map((f) => (
+                    <div key={f.title} className="hover-lift rounded-sm border border-border p-6">
+                      <h3 className="text-xl">{f.title}</h3>
+                      <p className="text-sm text-primary">{f.place}</p>
+                      <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.text}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-20 grid gap-px rule-top bg-border sm:grid-cols-4">
+              {stats.map((s) => (
+                <div key={s.label} className="bg-background px-6 py-10 text-center">
+                  <p className="font-display text-5xl text-primary">{s.value}</p>
+                  <p className="mt-2 label-eyebrow">{s.label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Themen */}
+        <section id="themen" className="border-t border-border bg-card/40">
+          <div className="mx-auto max-w-6xl px-6 py-24">
+            <p className="label-eyebrow">Aktuelle Themen</p>
+            <div className="mt-10 grid gap-8 md:grid-cols-3">
+              {topics.map((t) => (
+                <article
+                  key={t.title}
+                  className="hover-lift rounded-sm border border-border bg-background"
+                >
+                  <img
+                    src={t.img}
+                    alt={t.title}
+                    loading="lazy"
+                    className="aspect-[16/10] w-full rounded-t-sm object-cover"
+                  />
+                  <div className="p-6">
+                    <h3 className="text-2xl">{t.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{t.text}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Kontakt */}
+        <section id="kontakt" className="relative overflow-hidden border-t border-border">
+          <img
+            src={CONTACT_BACKGROUND}
+            alt=""
+            aria-hidden
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover object-center opacity-55 saturate-90"
+          />
+          <div className="pointer-events-none absolute inset-0 bg-background/46" aria-hidden />
+          <div
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_0%,rgba(0,0,0,0.18)_62%,rgba(0,0,0,0.62)_100%)]"
+            aria-hidden
+          />
+          <div className="relative mx-auto max-w-6xl px-6 py-28 text-center">
+            <p className="label-eyebrow text-primary">Kontakt</p>
+            <h2 className="mx-auto mt-6 max-w-3xl text-4xl leading-tight sm:text-6xl">
+              Eine Geschichte, die erzählt werden muss?
+            </h2>
+            <p className="mx-auto mt-6 max-w-xl text-muted-foreground">
+              Für Anfragen zu Reportagen, Interviews, Moderationen oder Kooperationen.
+            </p>
+            <a
+              href="mailto:info@bamdad-esmaili.de"
+              className="mt-10 inline-block rounded-sm bg-primary px-8 py-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+            >
+              info@bamdad-esmaili.de
+            </a>
+            <SocialLinks className="mx-auto mt-8 justify-center lg:hidden" />
+            <div className="mt-8 flex flex-wrap justify-center gap-x-5 gap-y-2">
+              {youtubeChannels.map((channel) => (
+                <a
+                  key={channel.href}
+                  href={channel.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="label-eyebrow text-foreground/62 transition-colors hover:text-primary"
+                >
+                  {channel.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer className="border-t border-border">
+        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+          <span>© {new Date().getFullYear()} Bamdad Esmaili</span>
+          <div className="flex flex-wrap gap-5">
+            <LegalDialog title="Impressum" trigger="Impressum">
+              <ImprintContent />
+            </LegalDialog>
+            <LegalDialog title="Datenschutzerklärung" trigger="Datenschutz">
+              <PrivacyContent />
+            </LegalDialog>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+export default Index;
+
+function SocialLinks({ className = "" }: { className?: string }) {
+  return (
+    <div className={`flex flex-wrap items-center gap-3 ${className}`}>
+
+      {socialLinks.map(({ label, href, Icon }) => (
+        <a
+          key={label}
+          href={href}
+          aria-label={label}
+          title={label}
+          target="_blank"
+          rel="noreferrer"
+          className="flex h-9 w-9 items-center justify-center text-primary/85 transition-colors hover:text-primary"
+        >
+          <Icon className="h-5 w-5" aria-hidden />
+        </a>
+      ))}
+    </div>
+  );
+}
+
+function SocialRail() {
+  return (
+    <aside
+      aria-label="Social Media Kanäle"
+      className="fixed left-6 top-1/2 z-40 hidden -translate-y-1/2 flex-col items-center gap-5 lg:flex"
+    >
+      <div className="flex flex-col items-center gap-4">
+        {socialLinks.map(({ label, href, Icon, hasMenu }) =>
+          hasMenu ? (
+            <div key={label} className="group relative flex items-center">
+              <a
+                href={href}
+                aria-label={label}
+                title={label}
+                target="_blank"
+                rel="noreferrer"
+                className="text-primary/85 transition-colors hover:text-primary focus:text-primary"
+              >
+                <Icon className="h-5 w-5" aria-hidden />
+              </a>
+              <span
+                className="absolute left-5 top-1/2 hidden h-20 w-5 -translate-y-1/2 group-hover:block group-focus-within:block"
+                aria-hidden
+              />
+              <div className="pointer-events-none absolute left-9 top-1/2 w-44 -translate-y-1/2 border border-white/10 bg-background/92 px-3 py-2 opacity-0 shadow-xl backdrop-blur transition-opacity group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100">
+                <p className="label-eyebrow mb-2 text-foreground/45">YouTube</p>
+                {youtubeChannels.map((channel) => (
+                  <a
+                    key={channel.href}
+                    href={channel.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="block py-1 text-xs text-muted-foreground transition-colors hover:text-primary focus:text-primary"
+                  >
+                    {channel.label.replace("YouTube ", "")}
+                  </a>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <a
+              key={label}
+              href={href}
+              aria-label={label}
+              title={label}
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary/85 transition-colors hover:text-primary"
+            >
+              <Icon className="h-5 w-5" aria-hidden />
+            </a>
+          ),
+        )}
+      </div>
+    </aside>
+  );
+}
+
+function LegalDialog({
+  title,
+  trigger,
+  children,
+}: {
+  title: string;
+  trigger: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Dialog>
+      <DialogTrigger className="label-eyebrow transition-colors hover:text-foreground">
+        {trigger}
+      </DialogTrigger>
+      <DialogContent className="max-h-[85svh] max-w-3xl overflow-y-auto border-border bg-background/95 p-0 backdrop-blur-xl sm:rounded-sm">
+        <DialogHeader className="border-b border-border px-6 py-5">
+          <p className="label-eyebrow">Rechtliches</p>
+          <DialogTitle className="font-display text-3xl font-normal">{title}</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-8 px-6 py-6 text-sm leading-relaxed text-muted-foreground">
+          {children}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function ImprintContent() {
+  return (
+    <>
+      <div>
+        <h3 className="text-lg text-foreground">Angaben gemäß § 5 TMG</h3>
+        <p className="mt-3">
+          Bamdad Esmaili
+          <br />
+          Journalist, Reporter und Moderator
+          <br />
+          c/o Autorenglück #44926
+          <br />
+          Albert-Einstein-Straße 47
+          <br />
+          02977 Hoyerswerda
+        </p>
+      </div>
+      <div>
+        <h3 className="text-lg text-foreground">Kontakt</h3>
+        <p className="mt-3">
+          E-Mail:{" "}
+          <a className="text-primary hover:underline" href="mailto:info@bamdad-esmaili.de">
+            info@bamdad-esmaili.de
+          </a>
+        </p>
+      </div>
+      <div>
+        <h3 className="text-lg text-foreground">Verantwortlich für den Inhalt</h3>
+        <p className="mt-3">
+          Bamdad Esmaili
+          <br />
+          Journalist, Reporter und Moderator
+          <br />
+          c/o Autorenglück #44926
+          <br />
+          Albert-Einstein-Straße 47
+          <br />
+          02977 Hoyerswerda
+        </p>
+      </div>
+    </>
+  );
+}
+
+function PrivacyContent() {
+  return (
+    <>
+      <div>
+        <h3 className="text-lg text-foreground">Verantwortlicher</h3>
+        <p className="mt-3">
+          Verantwortlich für die Verarbeitung personenbezogener Daten auf dieser Website ist Bamdad
+          Esmaili. Kontakt per E-Mail:{" "}
+          <a className="text-primary hover:underline" href="mailto:info@bamdad-esmaili.de">
+            info@bamdad-esmaili.de
+          </a>
+        </p>
+      </div>
+      <div>
+        <h3 className="text-lg text-foreground">Keine Cookies und kein Tracking</h3>
+        <p className="mt-3">
+          Diese Website setzt keine Cookies, verwendet kein Tracking, keine Analytics-Tools, keine
+          Werbenetzwerke und keine Social-Media-Pixel. Es werden keine Einwilligungsbanner benötigt,
+          solange keine solchen Dienste nachträglich eingebunden werden.
+        </p>
+      </div>
+      <div>
+        <h3 className="text-lg text-foreground">Zugriffsdaten</h3>
+        <p className="mt-3">
+          Beim Aufruf dieser Website können durch den Hosting-Anbieter technisch erforderliche
+          Server-Logdaten verarbeitet werden, etwa IP-Adresse, Datum und Uhrzeit des Abrufs,
+          aufgerufene Seite, Browsertyp und Betriebssystem. Die Verarbeitung dient ausschließlich
+          der sicheren und stabilen Bereitstellung der Website.
+        </p>
+      </div>
+      <div>
+        <h3 className="text-lg text-foreground">Kontaktaufnahme</h3>
+        <p className="mt-3">
+          Wenn Sie per E-Mail Kontakt aufnehmen, werden die übermittelten Angaben zur Bearbeitung
+          der Anfrage verarbeitet. Diese Daten werden nicht ohne Einwilligung an Dritte
+          weitergegeben.
+        </p>
+      </div>
+      <div>
+        <h3 className="text-lg text-foreground">Keine eingebundenen Drittanbieter</h3>
+        <p className="mt-3">
+          Bilder, Schriften und sonstige statische Inhalte werden lokal von dieser Website
+          ausgeliefert. Es werden keine externen Schriftanbieter, Karten, Videos, Kommentar-Dienste
+          oder Social-Media-Widgets eingebunden.
+        </p>
+      </div>
+      <div>
+        <h3 className="text-lg text-foreground">Ihre Rechte</h3>
+        <p className="mt-3">
+          Sie haben im Rahmen der gesetzlichen Vorgaben das Recht auf Auskunft, Berichtigung,
+          Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit sowie Widerspruch gegen die
+          Verarbeitung personenbezogener Daten.
+        </p>
+      </div>
+    </>
+  );
+}
