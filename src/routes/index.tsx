@@ -360,7 +360,7 @@ function Index() {
             aria-hidden
           />
           <div
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-72 bg-gradient-to-t from-background/82 via-background/30 to-transparent"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-[32rem] bg-gradient-to-t from-background/92 via-background/78 via-55% to-transparent"
             aria-hidden
           />
           <div className="relative z-20 mx-auto flex min-h-[calc(100svh-73px)] max-w-6xl items-center px-6 py-24 md:py-32">
