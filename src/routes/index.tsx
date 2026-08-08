@@ -6,8 +6,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  Archive,
   ChevronLeft,
   ChevronRight,
+  ExternalLink,
   FileText,
   Headphones,
   Instagram,
@@ -59,8 +61,9 @@ const works = [
   },
   {
     title: "Online",
-    cat: "Reportage",
+    cat: "Artikel öffnen",
     img: assetPath("media/migration-integration.jpeg"),
+    media: "web",
   },
   {
     title: "TV",
@@ -120,6 +123,50 @@ const mediaCollections = {
         meta: "Radio-Beitrag",
         src: assetPath("media/Radio/Raisi ist tot.mp3"),
         type: "audio",
+      },
+    ],
+  },
+  web: {
+    eyebrow: "Online",
+    title: "Online-Reportagen",
+    description:
+      "Veröffentlichte Webartikel mit Live-Link und gesichertem Screenshot, falls Originalseiten später nicht mehr erreichbar sind.",
+    Icon: FileText,
+    items: [
+      {
+        title: "Tod eines Geflüchteten in Essen",
+        meta: "WDR · Politik in NRW",
+        url: "https://www1.wdr.de/politik/politik-in-nrw/tod-eines-gefluechteten-in-essen-100.html",
+        screenshot: assetPath("media/Web/screenshots/image1.png"),
+        type: "article",
+      },
+      {
+        title: "Exiliraner und die Zukunft des Iran",
+        meta: "tagesschau.de · Gesellschaft",
+        url: "https://www.tagesschau.de/inland/gesellschaft/exiliraner-zukunft-iran-100.html",
+        screenshot: assetPath("media/Web/screenshots/image2.png"),
+        type: "article",
+      },
+      {
+        title: "Global Pop News",
+        meta: "WDR COSMO · Musik",
+        url: "https://www1.wdr.de/radio/cosmo/musik/global-pop-news/global-pop-news-6128.html",
+        screenshot: assetPath("media/Web/screenshots/image3.png"),
+        type: "article",
+      },
+      {
+        title: "Radio3 aktuell",
+        meta: "radio3 · Archiv",
+        url: "https://www.radiodrei.de/programm/schema/sendungen/radio3_am_morgen/archiv/20250825_0600/radio3_aktuell_0720.html",
+        screenshot: assetPath("media/Web/screenshots/image4.png"),
+        type: "article",
+      },
+      {
+        title: "Attentäter München: Hintergrund",
+        meta: "tagesschau.de · Gesellschaft",
+        url: "https://www.tagesschau.de/inland/gesellschaft/attentaeter-muenchen-hintergrund-100.html",
+        screenshot: assetPath("media/Web/screenshots/image5.png"),
+        type: "article",
       },
     ],
   },
@@ -487,6 +534,8 @@ function Index() {
                       <span className="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-background/70 text-primary backdrop-blur transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
                         {w.media === "radio" ? (
                           <Headphones className="h-5 w-5" aria-hidden />
+                        ) : w.media === "web" ? (
+                          <FileText className="h-5 w-5" aria-hidden />
                         ) : (
                           <Play className="h-5 w-5 fill-current" aria-hidden />
                         )}
@@ -911,6 +960,58 @@ function MediaViewer({
                 </div>
               </article>
             ))}
+          </div>
+        ) : selectedMedia === "web" ? (
+          <div className="p-4 sm:p-6">
+            <div className="grid gap-5 md:grid-cols-2">
+              {mediaCollections.web.items.map((item) => (
+                <article
+                  key={item.url}
+                  className="overflow-hidden rounded-sm border border-border bg-background"
+                >
+                  <a
+                    href={item.screenshot}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="group/screenshot block overflow-hidden bg-black/30"
+                    aria-label={`Archiv-Screenshot zu ${item.title} öffnen`}
+                  >
+                    <img
+                      src={item.screenshot}
+                      alt={`Screenshot des Artikels: ${item.title}`}
+                      loading="lazy"
+                      className="aspect-[16/10] w-full object-cover object-top grayscale transition-all duration-700 group-hover/screenshot:scale-[1.02] group-hover/screenshot:grayscale-0"
+                    />
+                  </a>
+                  <div className="space-y-4 p-5">
+                    <div>
+                      <p className="label-eyebrow">{item.meta}</p>
+                      <h3 className="mt-2 font-display text-2xl leading-tight">{item.title}</h3>
+                    </div>
+                    <div className="flex flex-wrap gap-3">
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-2 rounded-sm bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+                      >
+                        <ExternalLink className="h-4 w-4" aria-hidden />
+                        Live-Artikel
+                      </a>
+                      <a
+                        href={item.screenshot}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-2 rounded-sm border border-white/20 bg-background/25 px-4 py-2 text-sm font-medium backdrop-blur transition-colors hover:bg-secondary"
+                      >
+                        <Archive className="h-4 w-4" aria-hidden />
+                        Screenshot
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         ) : (
           <div className="grid gap-px bg-border">
