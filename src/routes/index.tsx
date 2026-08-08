@@ -6,6 +6,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { FileText, Instagram, Mic, Video, X, Youtube } from "lucide-react";
+import { useState } from "react";
 
 const assetPath = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 
@@ -61,44 +62,57 @@ const works = [
   },
 ];
 
-const galleryImages = [
-  {
-    title: "Reportage",
-    context: "Journalismus",
-    img: assetPath("media/gallery-11.jpg"),
-    className: "sm:col-span-2",
-  },
-  {
-    title: "Migration & Integration",
-    context: "Reportage",
-    img: assetPath("media/migration-integration.jpeg"),
-    className: "",
-  },
-  {
-    title: "TV-Arbeit",
-    context: "Sendung",
-    img: HERO_IMAGE,
-    className: "",
-  },
-  {
-    title: "Radio",
-    context: "Hörfunk",
-    img: assetPath("media/radio.jpg"),
-    className: "md:col-span-2",
-  },
-  {
-    title: "Iran & Diaspora",
-    context: "Themenfeld",
-    img: assetPath("media/iran-diaspora.jpg"),
-    className: "",
-  },
-  {
-    title: "Politik & Gesellschaft",
-    context: "Analyse",
-    img: assetPath("media/politics.png"),
-    className: "",
-  },
+const galleryFiles = [
+  "Bericht aus Taschkent.JPG",
+  "Bericht aus der Elfenbeinküste.jpg",
+  "Champions League Finale.jpg",
+  "Champions League.jpg",
+  "Dreh in Athen.jpg",
+  "Dreh in Dubai.jpg",
+  "Dreh in Idomeni.jpg",
+  "Dreh in Istanbul.jpg",
+  "Dreh in Kalamata.jpg",
+  "Dreh in London.JPG",
+  "Dreh in Österreich.jpeg",
+  "Dreharbeiten in Brasilien.JPG",
+  "Erste Radio Erfahrungen.jpg",
+  "Geflüchteter als Schwimmlehrer.jpg",
+  "Interview Angela Merkel.jpg",
+  "Interview Aryana Sayeed.jpg",
+  "Interview Ben Kingsley.jpg",
+  "Interview Dariush.JPG",
+  "Interview Ebi.jpg",
+  "Interview Frank Walter Steinmeier.jpg",
+  "Interview Franz Beckenbauer.jpg",
+  "Interview Golpa.jpg",
+  "Interview Googoosh.jpg",
+  "Interview Peter Maffay.jpg",
+  "Interview Ramin Javadi.jpg",
+  "Interview Shaggy.jpg",
+  "Interview Thomas De Maiziere.jpg",
+  "Interview in Bonn.jpg",
+  "Interview mit Reza Pahlavi.JPG",
+  "Karneval in Venedig.jpg",
+  "Live aus Athen.jpg",
+  "Live aus München 2.jpg",
+  "Live aus München.jpg",
+  "Live im Radio.JPG",
+  "Moderation 10 Jahre WDRforyou.jpg",
+  "Reportage auf Lesbos.jpg",
+  "Reportage in Belgrad.jpg",
+  "Reportage in Serbien.JPG",
+  "Zu Besuch beim Bundespräsidenten.jpeg",
+  "phoenix live 3.JPG",
 ];
+
+const galleryImages = galleryFiles.map((file, index) => ({
+  title: file.replace(/\.[^.]+$/, ""),
+  context: "Galerie",
+  img: assetPath(`media/galerie/${file}`),
+  className: index % 11 === 0 ? "sm:col-span-2" : index % 7 === 0 ? "md:col-span-2" : "",
+}));
+
+const INITIAL_GALLERY_COUNT = 5;
 
 const timeline = [
   {
@@ -190,6 +204,11 @@ const heroHighlights = [
 ];
 
 function Index() {
+  const [isGalleryExpanded, setIsGalleryExpanded] = useState(false);
+  const visibleGalleryImages = isGalleryExpanded
+    ? galleryImages
+    : galleryImages.slice(0, INITIAL_GALLERY_COUNT);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
@@ -403,13 +422,27 @@ function Index() {
                 <p className="label-eyebrow">Galerie</p>
                 <h2 className="mt-4 text-3xl leading-tight sm:text-4xl">Momente aus der Arbeit</h2>
               </div>
-              <span className="label-eyebrow">{String(galleryImages.length).padStart(2, "0")}</span>
+              <span className="label-eyebrow">
+                {String(visibleGalleryImages.length).padStart(2, "0")} /{" "}
+                {String(galleryImages.length).padStart(2, "0")}
+              </span>
             </div>
-            <div className="mt-10 grid auto-rows-[18rem] gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {galleryImages.map((image) => (
+            <div className="mt-10 grid auto-rows-[18rem] grid-flow-dense gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {visibleGalleryImages.map((image) => (
                 <GalleryImage key={image.title} {...image} />
               ))}
             </div>
+            {galleryImages.length > INITIAL_GALLERY_COUNT && (
+              <div className="mt-10 flex justify-center">
+                <button
+                  type="button"
+                  onClick={() => setIsGalleryExpanded((expanded) => !expanded)}
+                  className="rounded-sm border border-white/20 bg-background/25 px-6 py-3 text-sm font-medium backdrop-blur transition-colors hover:bg-secondary"
+                >
+                  {isGalleryExpanded ? "Weniger anzeigen" : "Mehr anzeigen"}
+                </button>
+              </div>
+            )}
           </div>
         </section>
 
