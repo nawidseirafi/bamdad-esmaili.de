@@ -296,7 +296,6 @@ const nav = [
   { href: "#ueber", label: "Über" },
   { href: "#arbeit", label: "Arbeiten" },
   { href: "#werdegang", label: "Werdegang" },
-  { href: "#themen", label: "Themen" },
   { href: "#kontakt", label: "Kontakt" },
 ];
 
