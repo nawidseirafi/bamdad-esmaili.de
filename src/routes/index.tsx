@@ -13,6 +13,7 @@ const assetPath = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 const HERO_IMAGE = assetPath("media/bamdad-esmaili.webp");
 const HERO_BACKGROUND = assetPath("hero.png");
 const CONTACT_BACKGROUND = assetPath("journalist-studio-hero.png");
+const PORTRAIT_IMAGE = assetPath("media/portfolio/bamdad-esmaili-portrait.jpg");
 
 const skills = [
   { label: "TV & Medien", value: 95 },
@@ -341,6 +342,14 @@ function Index() {
               </p>
             </div>
             <div className="space-y-6">
+              <figure className="overflow-hidden rounded-sm border border-border bg-card/40">
+                <img
+                  src={PORTRAIT_IMAGE}
+                  alt="Portrait von Bamdad Esmaili"
+                  loading="lazy"
+                  className="aspect-[4/5] w-full object-cover object-[50%_28%] grayscale"
+                />
+              </figure>
               {skills.map((s) => (
                 <div key={s.label}>
                   <div className="flex items-baseline justify-between">
