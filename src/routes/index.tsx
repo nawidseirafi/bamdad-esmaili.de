@@ -61,6 +61,45 @@ const works = [
   },
 ];
 
+const galleryImages = [
+  {
+    title: "Reportage",
+    context: "Journalismus",
+    img: assetPath("media/gallery-11.jpg"),
+    className: "sm:col-span-2",
+  },
+  {
+    title: "Migration & Integration",
+    context: "Reportage",
+    img: assetPath("media/migration-integration.jpeg"),
+    className: "",
+  },
+  {
+    title: "TV-Arbeit",
+    context: "Sendung",
+    img: HERO_IMAGE,
+    className: "",
+  },
+  {
+    title: "Radio",
+    context: "Hörfunk",
+    img: assetPath("media/radio.jpg"),
+    className: "md:col-span-2",
+  },
+  {
+    title: "Iran & Diaspora",
+    context: "Themenfeld",
+    img: assetPath("media/iran-diaspora.jpg"),
+    className: "",
+  },
+  {
+    title: "Politik & Gesellschaft",
+    context: "Analyse",
+    img: assetPath("media/politics.png"),
+    className: "",
+  },
+];
+
 const timeline = [
   {
     when: "Seit den 1990er-Jahren",
@@ -357,6 +396,21 @@ function Index() {
               </article>
             ))}
           </div>
+
+          <div id="galerie" className="mt-24 border-t border-border pt-16">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="label-eyebrow">Galerie</p>
+                <h2 className="mt-4 text-3xl leading-tight sm:text-4xl">Momente aus der Arbeit</h2>
+              </div>
+              <span className="label-eyebrow">{String(galleryImages.length).padStart(2, "0")}</span>
+            </div>
+            <div className="mt-10 grid auto-rows-[18rem] gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {galleryImages.map((image) => (
+                <GalleryImage key={image.title} {...image} />
+              ))}
+            </div>
+          </div>
         </section>
 
         {/* Werdegang */}
@@ -494,6 +548,48 @@ function Index() {
 
 export default Index;
 
+function GalleryImage({
+  title,
+  context,
+  img,
+  className,
+}: {
+  title: string;
+  context: string;
+  img: string;
+  className: string;
+}) {
+  return (
+    <Dialog>
+      <DialogTrigger
+        className={`hover-lift group relative overflow-hidden rounded-sm border border-border bg-background text-left ${className}`}
+      >
+        <img
+          src={img}
+          alt={title}
+          loading="lazy"
+          className="h-full w-full object-cover grayscale transition-all duration-700 group-hover:scale-[1.03] group-hover:grayscale-0"
+        />
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-background/88 via-background/36 to-transparent px-5 py-5"
+          aria-hidden
+        />
+        <div className="absolute inset-x-0 bottom-0 px-5 py-5">
+          <p className="label-eyebrow text-foreground/58">{context}</p>
+          <h3 className="mt-2 font-display text-2xl font-normal text-foreground">{title}</h3>
+        </div>
+      </DialogTrigger>
+      <DialogContent className="max-h-[92svh] max-w-5xl border-border bg-background/95 p-0 backdrop-blur-xl sm:rounded-sm">
+        <DialogHeader className="border-b border-border px-6 py-5">
+          <p className="label-eyebrow">{context}</p>
+          <DialogTitle className="font-display text-3xl font-normal">{title}</DialogTitle>
+        </DialogHeader>
+        <img src={img} alt={title} className="max-h-[72svh] w-full object-contain" />
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function SocialLinks({ className = "" }: { className?: string }) {
   return (
     <div className={`flex flex-wrap items-center gap-3 ${className}`}>
@@ -627,6 +723,10 @@ function ImprintContent() {
         </p>
       </div>
       <div>
+        <h3 className="text-lg text-foreground">Bildnachweise</h3>
+        <p className="mt-3">Einige Bilder auf dieser Website stammen von Raha Darvishpour.</p>
+      </div>
+      <div>
         <h3 className="text-lg text-foreground">Verantwortlich für den Inhalt</h3>
         <p className="mt-3">
           Bamdad Esmaili
@@ -688,6 +788,9 @@ function PrivacyContent() {
           Bilder, Schriften und sonstige statische Inhalte werden lokal von dieser Website
           ausgeliefert. Es werden keine externen Schriftanbieter, Karten, Videos, Kommentar-Dienste
           oder Social-Media-Widgets eingebunden.
+        </p>
+        <p className="mt-3">
+          Einige der auf dieser Website verwendeten Bilder stammen von Raha Darvishpour.
         </p>
       </div>
       <div>
