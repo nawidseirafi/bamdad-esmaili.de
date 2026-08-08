@@ -5,8 +5,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { FileText, Instagram, Mic, Video, X, Youtube } from "lucide-react";
-import { useState } from "react";
+import { ChevronLeft, ChevronRight, FileText, Instagram, Mic, Video, Youtube } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 const assetPath = (path: string) => `${import.meta.env.BASE_URL}${path}`;
 
@@ -43,11 +43,12 @@ const services = [
 const works = [
   {
     title: "Bildergalerie",
-    cat: "Feature",
+    cat: "Zur Galerie",
     img: assetPath("media/gallery-11.jpg"),
+    href: "#galerie",
   },
   {
-    title: "Migration & Integration",
+    title: "Online",
     cat: "Reportage",
     img: assetPath("media/migration-integration.jpeg"),
   },
@@ -112,6 +113,8 @@ const galleryImages = galleryItems.map(({ file, title }, index) => ({
   img: assetPath(`media/galerie/${file}`),
   className: index % 11 === 0 ? "sm:col-span-2" : index % 7 === 0 ? "md:col-span-2" : "",
 }));
+
+type GalleryImageData = (typeof galleryImages)[number];
 
 const INITIAL_GALLERY_COUNT = 5;
 
@@ -189,7 +192,7 @@ const nav = [
 
 const socialLinks = [
   { label: "YouTube", href: "https://www.youtube.com/@BTalks-Bamdad", Icon: Youtube, hasMenu: true },
-  { label: "X", href: "https://x.com/besmaili", Icon: X },
+  { label: "X", href: "https://x.com/besmaili", Icon: XPlatformIcon },
   { label: "Instagram", href: "https://www.instagram.com/bamdad_esmaili/?hl=de", Icon: Instagram },
 ];
 
@@ -200,12 +203,13 @@ const youtubeChannels = [
 
 const heroHighlights = [
   { title: "TV-Journalist", text: "WDR • DW • YouTube", Icon: Video },
-  { title: "Dokumentation", text: "Naher Osten • Europa", Icon: FileText },
+  { title: "Dokumentation", text: "Deutschland • Europa", Icon: FileText },
   { title: "Live-Berichte", text: "Politik • Gesellschaft • Migration", Icon: Mic },
 ];
 
 function Index() {
   const [isGalleryExpanded, setIsGalleryExpanded] = useState(false);
+  const [selectedGalleryIndex, setSelectedGalleryIndex] = useState<number | null>(null);
   const visibleGalleryImages = isGalleryExpanded
     ? galleryImages
     : galleryImages.slice(0, INITIAL_GALLERY_COUNT);
@@ -400,29 +404,41 @@ function Index() {
             <span className="label-eyebrow">04</span>
           </div>
           <div className="mt-10 grid gap-6 sm:grid-cols-2">
-            {works.map((w, i) => (
-              <article
-                key={w.title}
-                className={`hover-lift group overflow-hidden rounded-sm border border-border ${
-                  i % 3 === 0 ? "sm:col-span-2" : ""
-                }`}
-              >
-                <div className="overflow-hidden">
-                  <img
-                    src={w.img}
-                    alt={w.title}
-                    loading="lazy"
-                    className={`w-full object-cover grayscale transition-all duration-700 group-hover:scale-[1.03] group-hover:grayscale-0 ${
-                      i % 3 === 0 ? "aspect-[21/9]" : "aspect-[4/3]"
-                    }`}
-                  />
-                </div>
-                <div className="flex items-baseline justify-between px-6 py-5">
-                  <h3 className="text-xl">{w.title}</h3>
-                  <span className="label-eyebrow">{w.cat}</span>
-                </div>
-              </article>
-            ))}
+            {works.map((w, i) => {
+              const cardClassName = `hover-lift group overflow-hidden rounded-sm border border-border ${
+                i % 3 === 0 ? "sm:col-span-2" : ""
+              } ${w.href ? "block cursor-pointer" : ""}`;
+              const cardContent = (
+                <>
+                  <div className="overflow-hidden">
+                    <img
+                      src={w.img}
+                      alt={w.title}
+                      loading="lazy"
+                      className={`w-full object-cover grayscale transition-all duration-700 group-hover:scale-[1.03] group-hover:grayscale-0 ${
+                        i % 3 === 0 ? "aspect-[21/9]" : "aspect-[4/3]"
+                      }`}
+                    />
+                  </div>
+                  <div className="flex items-baseline justify-between px-6 py-5">
+                    <h3 className="text-xl">{w.title}</h3>
+                    <span className="label-eyebrow transition-colors group-hover:text-primary">
+                      {w.cat}
+                    </span>
+                  </div>
+                </>
+              );
+
+              return w.href ? (
+                <a key={w.title} href={w.href} className={cardClassName}>
+                  {cardContent}
+                </a>
+              ) : (
+                <article key={w.title} className={cardClassName}>
+                  {cardContent}
+                </article>
+              );
+            })}
           </div>
 
           <div id="galerie" className="mt-24 border-t border-border pt-16">
@@ -438,7 +454,11 @@ function Index() {
             </div>
             <div className="mt-10 grid auto-rows-[18rem] grid-flow-dense gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {visibleGalleryImages.map((image) => (
-                <GalleryImage key={image.title} {...image} />
+                <GalleryImage
+                  key={image.title}
+                  image={image}
+                  onOpen={() => setSelectedGalleryIndex(galleryImages.indexOf(image))}
+                />
               ))}
             </div>
             {galleryImages.length > INITIAL_GALLERY_COUNT && (
@@ -499,7 +519,8 @@ function Index() {
           </div>
         </section>
 
-        {/* Themen */}
+        {/* Themen
+
         <section id="themen" className="border-t border-border bg-card/40">
           <div className="mx-auto max-w-6xl px-6 py-24">
             <p className="label-eyebrow">Aktuelle Themen</p>
@@ -524,7 +545,7 @@ function Index() {
             </div>
           </div>
         </section>
-
+*/}
         {/* Kontakt */}
         <section id="kontakt" className="relative overflow-hidden border-t border-border">
           <img
@@ -571,6 +592,12 @@ function Index() {
         </section>
       </main>
 
+      <GalleryViewer
+        images={galleryImages}
+        selectedIndex={selectedGalleryIndex}
+        onSelectedIndexChange={setSelectedGalleryIndex}
+      />
+
       <footer className="border-t border-border">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <span>
@@ -601,42 +628,147 @@ function Index() {
 export default Index;
 
 function GalleryImage({
-  title,
-  context,
-  img,
-  className,
+  image,
+  onOpen,
 }: {
-  title: string;
-  context: string;
-  img: string;
-  className: string;
+  image: GalleryImageData;
+  onOpen: () => void;
 }) {
+  const { title, context, img, className } = image;
+
   return (
-    <Dialog>
-      <DialogTrigger
-        className={`hover-lift group relative overflow-hidden rounded-sm border border-border bg-background text-left ${className}`}
-      >
-        <img
-          src={img}
-          alt={title}
-          loading="lazy"
-          className="h-full w-full object-cover grayscale transition-all duration-700 group-hover:scale-[1.03] group-hover:grayscale-0"
-        />
-        <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-background/88 via-background/36 to-transparent px-5 py-5"
-          aria-hidden
-        />
-        <div className="absolute inset-x-0 bottom-0 px-5 py-5">
-          <p className="label-eyebrow text-foreground/58">{context}</p>
-          <h3 className="mt-2 font-display text-2xl font-normal text-foreground">{title}</h3>
-        </div>
-      </DialogTrigger>
-      <DialogContent className="max-h-[92svh] max-w-5xl border-border bg-background/95 p-0 backdrop-blur-xl sm:rounded-sm">
-        <DialogHeader className="border-b border-border px-6 py-5">
-          <p className="label-eyebrow">{context}</p>
-          <DialogTitle className="font-display text-3xl font-normal">{title}</DialogTitle>
+    <button
+      type="button"
+      onClick={onOpen}
+      className={`hover-lift group relative overflow-hidden rounded-sm border border-border bg-background text-left ${className}`}
+    >
+      <img
+        src={img}
+        alt={title}
+        loading="lazy"
+        className="h-full w-full object-cover grayscale transition-all duration-700 group-hover:scale-[1.03] group-hover:grayscale-0"
+      />
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-background/88 via-background/36 to-transparent px-5 py-5"
+        aria-hidden
+      />
+      <div className="absolute inset-x-0 bottom-0 px-5 py-5">
+        <p className="label-eyebrow text-foreground/58">{context}</p>
+        <h3 className="mt-2 font-display text-2xl font-normal text-foreground">{title}</h3>
+      </div>
+    </button>
+  );
+}
+
+function GalleryViewer({
+  images,
+  selectedIndex,
+  onSelectedIndexChange,
+}: {
+  images: GalleryImageData[];
+  selectedIndex: number | null;
+  onSelectedIndexChange: (index: number | null) => void;
+}) {
+  const touchStartX = useRef<number | null>(null);
+  const open = selectedIndex !== null;
+  const activeIndex = selectedIndex ?? 0;
+  const activeImage = images[activeIndex];
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "ArrowLeft") {
+        showImage(activeIndex - 1);
+      }
+
+      if (event.key === "ArrowRight") {
+        showImage(activeIndex + 1);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  });
+
+  const showImage = (index: number) => {
+    const nextIndex = (index + images.length) % images.length;
+    onSelectedIndexChange(nextIndex);
+  };
+
+  const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
+    if (touchStartX.current === null) {
+      return;
+    }
+
+    const swipeDistance = event.changedTouches[0].clientX - touchStartX.current;
+    touchStartX.current = null;
+
+    if (Math.abs(swipeDistance) < 50) {
+      return;
+    }
+
+    showImage(swipeDistance > 0 ? activeIndex - 1 : activeIndex + 1);
+  };
+
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) {
+          onSelectedIndexChange(null);
+        }
+      }}
+    >
+      <DialogContent className="max-h-[92svh] max-w-6xl overflow-hidden border-border bg-background/95 p-0 backdrop-blur-xl sm:rounded-sm">
+        <DialogHeader className="border-b border-border px-6 py-5 pr-14">
+          <p className="label-eyebrow">
+            Galerie · {String(activeIndex + 1).padStart(2, "0")} /{" "}
+            {String(images.length).padStart(2, "0")}
+          </p>
+          <DialogTitle className="font-display text-3xl font-normal">
+            {activeImage?.title}
+          </DialogTitle>
         </DialogHeader>
-        <img src={img} alt={title} className="max-h-[72svh] w-full object-contain" />
+        <div
+          className="relative bg-black/20"
+          onTouchStart={(event) => {
+            touchStartX.current = event.touches[0].clientX;
+          }}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div
+            className="flex h-[72svh] w-full items-center justify-center px-4 py-4 sm:px-8"
+            key={activeImage?.img}
+          >
+            <img
+              src={activeImage?.img}
+              alt={activeImage?.title}
+              className="max-h-full max-w-full object-contain"
+            />
+          </div>
+          <button
+            type="button"
+            onClick={() => showImage(activeIndex - 1)}
+            className="absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-background/70 text-foreground transition-colors hover:bg-secondary sm:left-6"
+            aria-label="Vorheriges Bild"
+          >
+            <ChevronLeft className="h-5 w-5" aria-hidden />
+          </button>
+          <button
+            type="button"
+            onClick={() => showImage(activeIndex + 1)}
+            className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-background/70 text-foreground transition-colors hover:bg-secondary sm:right-6"
+            aria-label="Nächstes Bild"
+          >
+            <ChevronRight className="h-5 w-5" aria-hidden />
+          </button>
+        </div>
       </DialogContent>
     </Dialog>
   );
@@ -660,6 +792,20 @@ function SocialLinks({ className = "" }: { className?: string }) {
         </a>
       ))}
     </div>
+  );
+}
+
+function XPlatformIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={className}
+      fill="currentColor"
+      aria-hidden
+      focusable="false"
+    >
+      <path d="M13.9 10.47 21.35 2h-1.76l-6.47 7.35L7.96 2H2l7.81 11.12L2 22h1.76l6.83-7.76L16.04 22H22l-8.1-11.53Zm-2.42 2.75-.79-1.11L4.4 3.3h2.72l5.08 7.12.79 1.11 6.6 9.24h-2.72l-5.39-7.55Z" />
+    </svg>
   );
 }
 
