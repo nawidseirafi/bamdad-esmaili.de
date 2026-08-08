@@ -5,7 +5,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ChevronLeft, ChevronRight, FileText, Instagram, Mic, Video, Youtube } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  FileText,
+  Headphones,
+  Instagram,
+  Mic,
+  Play,
+  Video,
+  Youtube,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 const assetPath = (path: string) => `${import.meta.env.BASE_URL}${path}`;
@@ -54,15 +64,68 @@ const works = [
   },
   {
     title: "TV",
-    cat: "Sendung",
+    cat: "Video ansehen",
     img: HERO_IMAGE,
+    media: "tv",
   },
   {
     title: "Radio",
-    cat: "Hörfunk",
+    cat: "Audio hören",
     img: assetPath("media/radio.jpg"),
+    media: "radio",
   },
 ];
+
+const mediaCollections = {
+  tv: {
+    eyebrow: "TV",
+    title: "TV-Beiträge & Liveschalten",
+    description: "Ausgewählte bewegte Arbeiten aus Studio, Redaktion und Live-Berichterstattung.",
+    Icon: Video,
+    items: [
+      {
+        title: "Showreel Bamdad Esmaili",
+        meta: "Liveschalten",
+        src: assetPath("media/TV/Showreel Bamdad Esmaili (Liveschalten).mp4"),
+        type: "video",
+      },
+    ],
+  },
+  radio: {
+    eyebrow: "Radio",
+    title: "Radio-Beiträge",
+    description: "Reportagen, Analysen und Gespräche zum direkten Anhören.",
+    Icon: Headphones,
+    items: [
+      {
+        title: "Frau, Leben, Freiheit: Die Revolution im Iran",
+        meta: "1LIVE · Reportage",
+        src: assetPath("media/Radio/1livereportage_2023-01-02_fraulebenfreiheitdierevolutionimiran_1live.mp3"),
+        type: "audio",
+      },
+      {
+        title: "Afghanen über Abschiebung",
+        meta: "Radio-Beitrag",
+        src: assetPath("media/Radio/Afghanen über Abschiebung.mp3"),
+        type: "audio",
+      },
+      {
+        title: "Iranischer Sänger wechselt die Seiten",
+        meta: "Radio-Beitrag",
+        src: assetPath("media/Radio/Iranischer Sänger wechselt die Seiten.mp3"),
+        type: "audio",
+      },
+      {
+        title: "Raisi ist tot",
+        meta: "Radio-Beitrag",
+        src: assetPath("media/Radio/Raisi ist tot.mp3"),
+        type: "audio",
+      },
+    ],
+  },
+} as const;
+
+type MediaKey = keyof typeof mediaCollections;
 
 const galleryItems = [
   { file: "bericht-aus-taschkent.jpg", title: "Bericht aus Taschkent" },
@@ -210,6 +273,7 @@ const heroHighlights = [
 function Index() {
   const [isGalleryExpanded, setIsGalleryExpanded] = useState(false);
   const [selectedGalleryIndex, setSelectedGalleryIndex] = useState<number | null>(null);
+  const [selectedMedia, setSelectedMedia] = useState<MediaKey | null>(null);
   const visibleGalleryImages = isGalleryExpanded
     ? galleryImages
     : galleryImages.slice(0, INITIAL_GALLERY_COUNT);
@@ -407,10 +471,10 @@ function Index() {
             {works.map((w, i) => {
               const cardClassName = `hover-lift group overflow-hidden rounded-sm border border-border ${
                 i % 3 === 0 ? "sm:col-span-2" : ""
-              } ${w.href ? "block cursor-pointer" : ""}`;
+              } ${w.href || w.media ? "block cursor-pointer" : ""}`;
               const cardContent = (
                 <>
-                  <div className="overflow-hidden">
+                  <div className="relative overflow-hidden">
                     <img
                       src={w.img}
                       alt={w.title}
@@ -419,6 +483,15 @@ function Index() {
                         i % 3 === 0 ? "aspect-[21/9]" : "aspect-[4/3]"
                       }`}
                     />
+                    {(w.href || w.media) && (
+                      <span className="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded-full border border-white/20 bg-background/70 text-primary backdrop-blur transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                        {w.media === "radio" ? (
+                          <Headphones className="h-5 w-5" aria-hidden />
+                        ) : (
+                          <Play className="h-5 w-5 fill-current" aria-hidden />
+                        )}
+                      </span>
+                    )}
                   </div>
                   <div className="flex items-baseline justify-between px-6 py-5">
                     <h3 className="text-xl">{w.title}</h3>
@@ -433,6 +506,15 @@ function Index() {
                 <a key={w.title} href={w.href} className={cardClassName}>
                   {cardContent}
                 </a>
+              ) : w.media ? (
+                <button
+                  key={w.title}
+                  type="button"
+                  onClick={() => setSelectedMedia(w.media)}
+                  className={`${cardClassName} text-left`}
+                >
+                  {cardContent}
+                </button>
               ) : (
                 <article key={w.title} className={cardClassName}>
                   {cardContent}
@@ -597,6 +679,7 @@ function Index() {
         selectedIndex={selectedGalleryIndex}
         onSelectedIndexChange={setSelectedGalleryIndex}
       />
+      <MediaViewer selectedMedia={selectedMedia} onSelectedMediaChange={setSelectedMedia} />
 
       <footer className="border-t border-border">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
@@ -769,6 +852,87 @@ function GalleryViewer({
             <ChevronRight className="h-5 w-5" aria-hidden />
           </button>
         </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function MediaViewer({
+  selectedMedia,
+  onSelectedMediaChange,
+}: {
+  selectedMedia: MediaKey | null;
+  onSelectedMediaChange: (media: MediaKey | null) => void;
+}) {
+  const open = selectedMedia !== null;
+  const collection = selectedMedia ? mediaCollections[selectedMedia] : mediaCollections.tv;
+  const { Icon } = collection;
+
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) {
+          onSelectedMediaChange(null);
+        }
+      }}
+    >
+      <DialogContent className="max-h-[92svh] max-w-5xl overflow-y-auto border-border bg-background/95 p-0 backdrop-blur-xl sm:rounded-sm">
+        <DialogHeader className="border-b border-border px-6 py-5 pr-14">
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-secondary text-primary">
+              <Icon className="h-5 w-5" aria-hidden />
+            </span>
+            <div>
+              <p className="label-eyebrow">{collection.eyebrow}</p>
+              <DialogTitle className="mt-2 font-display text-3xl font-normal">
+                {collection.title}
+              </DialogTitle>
+            </div>
+          </div>
+          <p className="max-w-2xl pt-2 text-sm leading-relaxed text-muted-foreground">
+            {collection.description}
+          </p>
+        </DialogHeader>
+
+        {selectedMedia === "tv" ? (
+          <div className="space-y-5 p-4 sm:p-6">
+            {mediaCollections.tv.items.map((item) => (
+              <article key={item.src} className="overflow-hidden rounded-sm border border-border bg-black">
+                <video
+                  src={item.src}
+                  controls
+                  preload="metadata"
+                  className="aspect-video w-full bg-black object-contain"
+                />
+                <div className="flex flex-col gap-1 border-t border-border bg-background px-5 py-4 sm:flex-row sm:items-baseline sm:justify-between">
+                  <h3 className="font-display text-2xl">{item.title}</h3>
+                  <span className="label-eyebrow">{item.meta}</span>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div className="grid gap-px bg-border">
+            {mediaCollections.radio.items.map((item, index) => (
+              <article
+                key={item.src}
+                className="grid gap-4 bg-background px-5 py-5 sm:grid-cols-[4rem_1fr] sm:items-center sm:px-6"
+              >
+                <div className="font-display text-3xl text-primary">
+                  {String(index + 1).padStart(2, "0")}
+                </div>
+                <div className="min-w-0">
+                  <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+                    <h3 className="text-lg text-foreground">{item.title}</h3>
+                    <span className="label-eyebrow">{item.meta}</span>
+                  </div>
+                  <audio src={item.src} controls preload="metadata" className="w-full" />
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );
