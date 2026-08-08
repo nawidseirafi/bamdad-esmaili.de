@@ -573,7 +573,17 @@ function Index() {
 
       <footer className="border-t border-border">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <span>© {new Date().getFullYear()} Bamdad Esmaili</span>
+          <span>
+            © {new Date().getFullYear()} Bamdad Esmaili · Design:{" "}
+            <a
+              href="https://seirafi.de"
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary hover:underline"
+            >
+              seirafi.de
+            </a>
+          </span>
           <div className="flex flex-wrap gap-5">
             <LegalDialog title="Impressum" trigger="Impressum">
               <ImprintContent />
