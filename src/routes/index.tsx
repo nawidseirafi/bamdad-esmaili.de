@@ -21,6 +21,10 @@ import {
 import { useEffect, useRef, useState } from "react";
 
 const assetPath = (path: string) => `${import.meta.env.BASE_URL}${path}`;
+const emailUserParts = ["in", "fo"];
+const emailDomainParts = ["bamdad", "-", "esmaili", ".", "de"];
+
+const getEmailAddress = () => `${emailUserParts.join("")}@${emailDomainParts.join("")}`;
 
 const HERO_IMAGE = assetPath("media/bamdad-esmaili.webp");
 const HERO_BACKGROUND = assetPath("hero.png");
@@ -698,12 +702,9 @@ function Index() {
             <p className="mx-auto mt-6 max-w-xl text-muted-foreground">
               Für Anfragen zu Reportagen, Interviews, Moderationen oder Kooperationen:
             </p>
-            <a
-              href="mailto:info@bamdad-esmaili.de"
+            <EmailLink
               className="mt-10 inline-block rounded-sm bg-primary px-8 py-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
-            >
-              info@bamdad-esmaili.de
-            </a>
+            />
             <SocialLinks className="mx-auto mt-8 justify-center lg:hidden" />
             <div className="mt-8 flex flex-wrap justify-center gap-x-5 gap-y-2">
               {youtubeChannels.map((channel) => (
@@ -1158,6 +1159,36 @@ function LegalDialog({
   );
 }
 
+function EmailLink({
+  className = "",
+  children,
+}: {
+  className?: string;
+  children?: React.ReactNode;
+}) {
+  const [emailAddress, setEmailAddress] = useState<string | null>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (emailAddress) {
+      return;
+    }
+
+    event.preventDefault();
+    setEmailAddress(getEmailAddress());
+  };
+
+  return (
+    <a
+      className={className}
+      href={emailAddress ? `mailto:${emailAddress}` : "#email-anzeigen"}
+      onClick={handleClick}
+      data-contact="email"
+    >
+      {children ?? emailAddress ?? "E-Mail-Adresse anzeigen"}
+    </a>
+  );
+}
+
 function ImprintContent() {
   return (
     <>
@@ -1179,9 +1210,7 @@ function ImprintContent() {
         <h3 className="text-lg text-foreground">Kontakt</h3>
         <p className="mt-3">
           E-Mail:{" "}
-          <a className="text-primary hover:underline" href="mailto:info@bamdad-esmaili.de">
-            info@bamdad-esmaili.de
-          </a>
+          <EmailLink className="text-primary hover:underline" />
         </p>
       </div>
       <div>
@@ -1195,11 +1224,7 @@ function ImprintContent() {
           <br />
           Journalist, Reporter und Moderator
           <br />
-          c/o Autorenglück #44926
-          <br />
-          Albert-Einstein-Straße 47
-          <br />
-          02977 Hoyerswerda
+          Anschrift wie oben
         </p>
       </div>
     </>
@@ -1214,9 +1239,7 @@ function PrivacyContent() {
         <p className="mt-3">
           Verantwortlich für die Verarbeitung personenbezogener Daten auf dieser Website ist Bamdad
           Esmaili. Kontakt per E-Mail:{" "}
-          <a className="text-primary hover:underline" href="mailto:info@bamdad-esmaili.de">
-            info@bamdad-esmaili.de
-          </a>
+          <EmailLink className="text-primary hover:underline" />
         </p>
       </div>
       <div>
