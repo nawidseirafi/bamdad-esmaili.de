@@ -3,7 +3,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Archive,
@@ -21,7 +20,8 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-const assetPath = (path: string) => `${import.meta.env.BASE_URL}${path}`;
+const assetBasePath = import.meta.env.SSR ? "./" : import.meta.env.BASE_URL;
+const assetPath = (path: string) => `${assetBasePath}${path}`;
 const emailUserParts = ["in", "fo"];
 const emailDomainParts = ["bamdad", "-", "esmaili", ".", "de"];
 
@@ -302,9 +302,15 @@ const heroHighlights = [
   { title: "Live-Berichte", text: "Politik • Gesellschaft • Migration", Icon: Mic },
 ];
 
-function Index() {
+type IndexProps = {
+  initialGalleryFiles?: string[];
+};
+
+function Index({ initialGalleryFiles = [] }: IndexProps) {
   const [isGalleryExpanded, setIsGalleryExpanded] = useState(false);
-  const [galleryImages, setGalleryImages] = useState<GalleryImageData[]>([]);
+  const [galleryImages, setGalleryImages] = useState<GalleryImageData[]>(
+    toGalleryImages(initialGalleryFiles),
+  );
   const [selectedGalleryIndex, setSelectedGalleryIndex] = useState<number | null>(null);
   const [selectedMedia, setSelectedMedia] = useState<MediaKey | null>(null);
   const visibleGalleryImages = isGalleryExpanded
@@ -389,10 +395,9 @@ function Index() {
             <div className="max-w-[42rem]">
               <p className="label-eyebrow text-primary">Journalist · Reporter · Moderator</p>
               <h1 className="mt-5 text-[3.35rem] leading-[0.9] tracking-tight drop-shadow-2xl sm:text-7xl lg:mt-6 lg:text-[6.5rem]">
-                Ich bin
-                <br />
                 <span className="block italic text-primary sm:inline">Bamdad</span>
                 <span className="block sm:inline">Esmaili</span>
+                <span className="sr-only"> - deutsch-iranischer Journalist, Reporter und Moderator</span>
               </h1>
               <p className="mt-7 max-w-[18.5rem] text-base leading-7 text-foreground/78 lg:mt-8 lg:max-w-xl lg:text-base lg:leading-relaxed">
                 Deutsch-iranischer Journalist. Seit den 1990er-Jahren zwischen Redaktion, Straße und
@@ -515,6 +520,7 @@ function Index() {
         <section className="border-y border-border bg-card/40">
           <div className="mx-auto max-w-6xl px-6 py-24">
             <p className="label-eyebrow">Was ich tue</p>
+            <h2 className="mt-4 text-3xl leading-tight sm:text-4xl">Reportagen, Dokumentationen und Live-Formate</h2>
             <div className="mt-10 grid gap-px bg-border sm:grid-cols-3">
               {services.map((s) => (
                 <article
@@ -532,8 +538,11 @@ function Index() {
 
         {/* Arbeiten */}
         <section id="arbeit" className="mx-auto max-w-6xl px-6 py-24">
-          <div className="flex items-end justify-between">
-            <p className="label-eyebrow">Ausgewählte Arbeiten</p>
+          <div className="flex items-end justify-between gap-6">
+            <div>
+              <p className="label-eyebrow">Ausgewählte Arbeiten</p>
+              <h2 className="mt-4 text-3xl leading-tight sm:text-4xl">Arbeiten und Referenzen</h2>
+            </div>
             <span className="label-eyebrow">04</span>
           </div>
           <div className="mt-10 grid gap-6 sm:grid-cols-2">
@@ -765,15 +774,43 @@ function Index() {
             </a>
           </span>
           <div className="flex flex-wrap gap-5">
-            <LegalDialog title="Impressum" trigger="Impressum">
+            <LegalDialog title="Impressum" trigger="Impressum" fallbackHref="#impressum">
               <ImprintContent />
             </LegalDialog>
-            <LegalDialog title="Datenschutzerklärung" trigger="Datenschutz">
+            <LegalDialog
+              title="Datenschutzerklärung"
+              trigger="Datenschutz"
+              fallbackHref="#datenschutz"
+            >
               <PrivacyContent />
             </LegalDialog>
           </div>
         </div>
       </footer>
+
+      <section
+        id="impressum"
+        className="hidden border-t border-border bg-background px-6 py-16 target:block"
+      >
+        <div className="mx-auto max-w-3xl space-y-8 text-sm leading-relaxed text-muted-foreground">
+          <p className="label-eyebrow text-primary">Rechtliches</p>
+          <h2 className="font-display text-3xl font-normal text-foreground">Impressum</h2>
+          <ImprintContent />
+        </div>
+      </section>
+
+      <section
+        id="datenschutz"
+        className="hidden border-t border-border bg-background px-6 py-16 target:block"
+      >
+        <div className="mx-auto max-w-3xl space-y-8 text-sm leading-relaxed text-muted-foreground">
+          <p className="label-eyebrow text-primary">Rechtliches</p>
+          <h2 className="font-display text-3xl font-normal text-foreground">
+            Datenschutzerklärung
+          </h2>
+          <PrivacyContent />
+        </div>
+      </section>
     </div>
   );
 }
@@ -1156,27 +1193,40 @@ function SocialRail() {
 function LegalDialog({
   title,
   trigger,
+  fallbackHref,
   children,
 }: {
   title: string;
   trigger: string;
+  fallbackHref: string;
   children: React.ReactNode;
 }) {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Dialog>
-      <DialogTrigger className="label-eyebrow transition-colors hover:text-foreground">
+    <>
+      <a
+        href={fallbackHref}
+        onClick={(event) => {
+          event.preventDefault();
+          setOpen(true);
+        }}
+        className="label-eyebrow transition-colors hover:text-foreground"
+      >
         {trigger}
-      </DialogTrigger>
-      <DialogContent className="max-h-[85svh] max-w-3xl overflow-y-auto border-border bg-background/95 p-0 backdrop-blur-xl sm:rounded-sm">
-        <DialogHeader className="border-b border-border px-6 py-5">
-          <p className="label-eyebrow">Rechtliches</p>
-          <DialogTitle className="font-display text-3xl font-normal">{title}</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-8 px-6 py-6 text-sm leading-relaxed text-muted-foreground">
-          {children}
-        </div>
-      </DialogContent>
-    </Dialog>
+      </a>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-h-[85svh] max-w-3xl overflow-y-auto border-border bg-background/95 p-0 backdrop-blur-xl sm:rounded-sm">
+          <DialogHeader className="border-b border-border px-6 py-5">
+            <p className="label-eyebrow">Rechtliches</p>
+            <DialogTitle className="font-display text-3xl font-normal">{title}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-8 px-6 py-6 text-sm leading-relaxed text-muted-foreground">
+            {children}
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
