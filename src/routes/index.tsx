@@ -120,13 +120,13 @@ const mediaCollections = {
       {
         title: "Afghanen über Abschiebung",
         meta: "Radio-Beitrag",
-        src: assetPath("media/Radio/Afghanen über Abschiebung.mp3"),
+        src: assetPath("media/Radio/Afghanen ueber Abschiebung.mp3"),
         type: "audio",
       },
       {
         title: "Iranischer Sänger wechselt die Seiten",
         meta: "Radio-Beitrag",
-        src: assetPath("media/Radio/Iranischer Sänger wechselt die Seiten.mp3"),
+        src: assetPath("media/Radio/Iranischer Saenger wechselt die Seiten.mp3"),
         type: "audio",
       },
       {
