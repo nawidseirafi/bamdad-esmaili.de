@@ -243,7 +243,7 @@ const timeline = [
   {
     when: "Seit vielen Jahren",
     role: "Reporter & Autor",
-    place: "WDR • Deutsche Welle • Internationale Medien",
+    place: "WDR • Deutsche Welle • BBC • Internationale Medien",
     text: "Reportagen, Beiträge, Interviews und Moderationen zu Migration, Integration und politischen Entwicklungen in Deutschland und Europa.",
   },
   {
@@ -378,7 +378,7 @@ function Index() {
               </h1>
               <p className="mt-8 max-w-xl text-base leading-relaxed text-foreground/78">
                 Deutsch-iranischer Journalist. Seit den 1990er-Jahren zwischen Redaktion, Straße und
-                Fluchtroute — für WDR, Deutsche Welle und eigene Formate.
+                Fluchtroute — für WDR, Deutsche Welle, BBC und eigene Formate.
               </p>
               <div className="mt-10 flex flex-wrap gap-3">
                 <a
@@ -431,7 +431,7 @@ function Index() {
               </p>
               <p className="leading-relaxed">
                 Seit den 1990er-Jahren arbeitet er für Radio, Fernsehen und Onlineformate, unter
-                anderem für den WDR, die Deutsche Welle sowie weitere öffentlich-rechtliche und
+                anderem für den WDR, die Deutsche Welle, BBC sowie weitere öffentlich-rechtliche und
                 internationale Medien. Neben seiner Arbeit für klassische Medien berichtet er
                 regelmäßig auf seinem eigenen YouTube-Kanal über aktuelle Entwicklungen im Iran, die
                 iranische Diaspora, Migration, Integration sowie gesellschaftliche und politische
@@ -733,7 +733,7 @@ function Index() {
       />
       <MediaViewer selectedMedia={selectedMedia} onSelectedMediaChange={setSelectedMedia} />
 
-      <footer className="border-t border-border">
+      <footer className="relative z-20 border-t border-border bg-background">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <span>
             © {new Date().getFullYear()} Bamdad Esmaili · Design:{" "}
@@ -741,7 +741,7 @@ function Index() {
               href="https://seirafi.de"
               target="_blank"
               rel="noreferrer"
-              className="text-primary hover:underline"
+              className="relative z-30 inline-block text-primary hover:underline"
             >
               seirafi.de
             </a>
