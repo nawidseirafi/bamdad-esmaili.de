@@ -34,6 +34,7 @@ const secondaryButtonClass =
 
 const HERO_IMAGE = assetPath("media/bamdad-esmaili.webp");
 const HERO_BACKGROUND = assetPath("hero.png");
+const HERO_MOBILE_BACKGROUND = assetPath("hero-mobile.png");
 const CONTACT_BACKGROUND = assetPath("journalist-studio-hero.png");
 const PORTRAIT_IMAGE = assetPath("media/portfolio/bamdad-esmaili-portrait.jpg");
 
@@ -336,12 +337,12 @@ function Index() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
+      <header className="absolute top-0 z-50 w-full border-b border-transparent bg-transparent lg:sticky lg:border-border lg:bg-background/80 lg:backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
           <a href="#top" className="font-display text-lg tracking-tight">
             Bamdad <span className="text-primary">Esmaili</span>
           </a>
-          <nav className="hidden gap-8 md:flex">
+          <nav className="hidden gap-8 lg:flex">
             {nav.map((i) => (
               <a
                 key={i.href}
@@ -358,34 +359,40 @@ function Index() {
 
       <main id="top">
         {/* Hero */}
-        <section className="relative min-h-[calc(100svh-73px)] overflow-hidden md:min-h-[calc(100svh-73px)]">
+        <section className="relative min-h-[100svh] overflow-hidden lg:min-h-[calc(100svh-73px)]">
           <img
             src={HERO_BACKGROUND}
             alt=""
             aria-hidden
-            className="absolute inset-0 h-full w-full object-cover object-[74%_center] md:object-center"
+            className="absolute inset-0 hidden h-full w-full object-cover object-center lg:block"
+          />
+          <img
+            src={HERO_MOBILE_BACKGROUND}
+            alt=""
+            aria-hidden
+            className="absolute inset-0 h-full w-full object-cover object-[center_38%] lg:hidden"
           />
           <div
-            className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/72 via-background/32 via-58% to-background/18 md:from-background/48 md:via-background/10 md:via-42% md:to-background/20"
+            className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/38 via-background/12 to-transparent lg:from-background/48 lg:via-background/10 lg:via-42% lg:to-background/20"
             aria-hidden
           />
           <div
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-[32rem] bg-gradient-to-t from-background/92 via-background/78 via-55% to-transparent"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-[30rem] bg-gradient-to-t from-background/66 via-background/24 via-55% to-transparent lg:h-[32rem] lg:from-background/92 lg:via-background/78"
             aria-hidden
           />
-          <div className="relative z-20 mx-auto flex min-h-[calc(100svh-73px)] max-w-6xl items-center px-6 py-24 md:py-32">
-            <div className="max-w-2xl">
+          <div className="relative z-20 mx-auto flex min-h-[100svh] max-w-6xl items-start px-6 pb-16 pt-[18svh] lg:min-h-[calc(100svh-73px)] lg:items-center lg:py-32">
+            <div className="max-w-[42rem]">
               <p className="label-eyebrow text-primary">Journalist · Reporter · Moderator</p>
-              <h1 className="mt-6 text-5xl leading-[0.95] tracking-tight drop-shadow-2xl sm:text-7xl md:text-8xl lg:text-[6.5rem]">
+              <h1 className="mt-5 text-[3.35rem] leading-[0.9] tracking-tight drop-shadow-2xl sm:text-7xl lg:mt-6 lg:text-[6.5rem]">
                 Ich bin
                 <br />
                 <span className="italic text-primary">Bamdad</span> Esmaili
               </h1>
-              <p className="mt-8 max-w-xl text-base leading-relaxed text-foreground/78">
+              <p className="mt-7 max-w-[18.5rem] text-base leading-7 text-foreground/78 lg:mt-8 lg:max-w-xl lg:text-base lg:leading-relaxed">
                 Deutsch-iranischer Journalist. Seit den 1990er-Jahren zwischen Redaktion, Straße und
                 Fluchtroute — für WDR, Deutsche Welle, BBC und eigene Formate.
               </p>
-              <div className="mt-10 flex flex-wrap gap-3">
+              <div className="mt-10 flex flex-nowrap gap-3">
                 <a
                   href="#arbeit"
                   className={primaryButtonClass}
