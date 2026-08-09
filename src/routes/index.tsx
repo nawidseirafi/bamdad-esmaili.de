@@ -185,57 +185,32 @@ const mediaCollections = {
 
 type MediaKey = keyof typeof mediaCollections;
 
-const galleryItems = [
-  { file: "bericht-aus-taschkent.jpg", title: "Bericht aus Taschkent" },
-  { file: "bericht-aus-der-elfenbeinkueste.jpg", title: "Bericht aus der Elfenbeinküste" },
-  { file: "champions-league-finale.jpg", title: "Champions League Finale" },
-  { file: "champions-league.jpg", title: "Champions League" },
-  { file: "dreh-in-athen.jpg", title: "Dreh in Athen" },
-  { file: "dreh-in-dubai.jpg", title: "Dreh in Dubai" },
-  { file: "dreh-in-idomeni.jpg", title: "Dreh in Idomeni" },
-  { file: "dreh-in-istanbul.jpg", title: "Dreh in Istanbul" },
-  { file: "dreh-in-kalamata.jpg", title: "Dreh in Kalamata" },
-  { file: "dreh-in-london.jpg", title: "Dreh in London" },
-  { file: "dreh-in-oesterreich.jpg", title: "Dreh in Österreich" },
-  { file: "dreharbeiten-in-brasilien.jpg", title: "Dreharbeiten in Brasilien" },
-  { file: "erste-radio-erfahrungen.jpg", title: "Erste Radio Erfahrungen" },
-  { file: "gefluechteter-als-schwimmlehrer.jpg", title: "Geflüchteter als Schwimmlehrer" },
-  { file: "interview-angela-merkel.jpg", title: "Interview Angela Merkel" },
-  { file: "interview-aryana-sayeed.jpg", title: "Interview Aryana Sayeed" },
-  { file: "interview-ben-kingsley.jpg", title: "Interview Ben Kingsley" },
-  { file: "interview-dariush.jpg", title: "Interview Dariush" },
-  { file: "interview-ebi.jpg", title: "Interview Ebi" },
-  { file: "interview-frank-walter-steinmeier.jpg", title: "Interview Frank Walter Steinmeier" },
-  { file: "interview-franz-beckenbauer.jpg", title: "Interview Franz Beckenbauer" },
-  { file: "interview-golpa.jpg", title: "Interview Golpa" },
-  { file: "interview-googoosh.jpg", title: "Interview Googoosh" },
-  { file: "interview-peter-maffay.jpg", title: "Interview Peter Maffay" },
-  { file: "interview-ramin-javadi.jpg", title: "Interview Ramin Javadi" },
-  { file: "interview-shaggy.jpg", title: "Interview Shaggy" },
-  { file: "interview-thomas-de-maiziere.jpg", title: "Interview Thomas De Maiziere" },
-  { file: "interview-in-bonn.jpg", title: "Interview in Bonn" },
-  { file: "interview-mit-reza-pahlavi.jpg", title: "Interview mit Reza Pahlavi" },
-  { file: "karneval-in-venedig.jpg", title: "Karneval in Venedig" },
-  { file: "live-aus-athen.jpg", title: "Live aus Athen" },
-  { file: "live-aus-muenchen-2.jpg", title: "Live aus München 2" },
-  { file: "live-aus-muenchen.jpg", title: "Live aus München" },
-  { file: "live-im-radio.jpg", title: "Live im Radio" },
-  { file: "moderation-10-jahre-wdrforyou.jpg", title: "Moderation 10 Jahre WDRforyou" },
-  { file: "reportage-auf-lesbos.jpg", title: "Reportage auf Lesbos" },
-  { file: "reportage-in-belgrad.jpg", title: "Reportage in Belgrad" },
-  { file: "reportage-in-serbien.jpg", title: "Reportage in Serbien" },
-  { file: "zu-besuch-beim-bundespraesidenten.jpg", title: "Zu Besuch beim Bundespräsidenten" },
-  { file: "phoenix-live-3.jpg", title: "phoenix live 3" },
-];
+type GalleryImageData = {
+  title: string;
+  context: string;
+  img: string;
+  className: string;
+};
 
-const galleryImages = galleryItems.map(({ file, title }, index) => ({
-  title,
-  context: "Galerie",
-  img: assetPath(`media/galerie/${file}`),
-  className: index % 11 === 0 ? "sm:col-span-2" : index % 7 === 0 ? "md:col-span-2" : "",
-}));
+const GALLERY_JSON_URL = assetPath("media/galerie/gallery.json");
 
-type GalleryImageData = (typeof galleryImages)[number];
+const isGalleryFile = (item: unknown): item is string => typeof item === "string";
+
+const titleFromGalleryFile = (file: string) =>
+  file
+    .replace(/\.[^.]+$/, "")
+    .split("-")
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toLocaleUpperCase("de-DE") + word.slice(1))
+    .join(" ");
+
+const toGalleryImages = (files: string[]): GalleryImageData[] =>
+  files.map((file, index) => ({
+    title: titleFromGalleryFile(file),
+    context: "Galerie",
+    img: assetPath(`media/galerie/${file}`),
+    className: index % 11 === 0 ? "sm:col-span-2" : index % 7 === 0 ? "md:col-span-2" : "",
+  }));
 
 const INITIAL_GALLERY_COUNT = 5;
 
@@ -329,11 +304,41 @@ const heroHighlights = [
 
 function Index() {
   const [isGalleryExpanded, setIsGalleryExpanded] = useState(false);
+  const [galleryImages, setGalleryImages] = useState<GalleryImageData[]>([]);
   const [selectedGalleryIndex, setSelectedGalleryIndex] = useState<number | null>(null);
   const [selectedMedia, setSelectedMedia] = useState<MediaKey | null>(null);
   const visibleGalleryImages = isGalleryExpanded
     ? galleryImages
     : galleryImages.slice(0, INITIAL_GALLERY_COUNT);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    fetch(GALLERY_JSON_URL, { cache: "no-store" })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Could not load gallery JSON: ${response.status}`);
+        }
+
+        return response.json();
+      })
+      .then((items: unknown) => {
+        if (!Array.isArray(items)) {
+          throw new Error("Gallery JSON must be an array");
+        }
+
+        if (isMounted) {
+          setGalleryImages(toGalleryImages(items.filter(isGalleryFile)));
+        }
+      })
+      .catch((error) => {
+        console.warn(error);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -604,7 +609,7 @@ function Index() {
             <div className="mt-10 grid auto-rows-[18rem] grid-flow-dense gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {visibleGalleryImages.map((image) => (
                 <GalleryImage
-                  key={image.title}
+                  key={image.img}
                   image={image}
                   onOpen={() => setSelectedGalleryIndex(galleryImages.indexOf(image))}
                 />
