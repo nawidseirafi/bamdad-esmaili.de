@@ -391,7 +391,8 @@ function Index() {
               <h1 className="mt-5 text-[3.35rem] leading-[0.9] tracking-tight drop-shadow-2xl sm:text-7xl lg:mt-6 lg:text-[6.5rem]">
                 Ich bin
                 <br />
-                <span className="italic text-primary">Bamdad</span> Esmaili
+                <span className="block italic text-primary sm:inline">Bamdad</span>
+                <span className="block sm:inline">Esmaili</span>
               </h1>
               <p className="mt-7 max-w-[18.5rem] text-base leading-7 text-foreground/78 lg:mt-8 lg:max-w-xl lg:text-base lg:leading-relaxed">
                 Deutsch-iranischer Journalist. Seit den 1990er-Jahren zwischen Redaktion, Straße und
