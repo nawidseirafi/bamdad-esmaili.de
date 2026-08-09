@@ -696,7 +696,7 @@ function Index() {
               Eine Geschichte, die erzählt werden muss?
             </h2>
             <p className="mx-auto mt-6 max-w-xl text-muted-foreground">
-              Für Anfragen zu Reportagen, Interviews, Moderationen oder Kooperationen.
+              Für Anfragen zu Reportagen, Interviews, Moderationen oder Kooperationen:
             </p>
             <a
               href="mailto:info@bamdad-esmaili.de"
