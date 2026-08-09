@@ -12,6 +12,7 @@ import {
   ExternalLink,
   FileText,
   Headphones,
+  Images,
   Instagram,
   Mic,
   Play,
@@ -539,6 +540,8 @@ function Index() {
                           <Headphones className="h-5 w-5" aria-hidden />
                         ) : w.media === "web" ? (
                           <FileText className="h-5 w-5" aria-hidden />
+                        ) : w.href === "#galerie" ? (
+                          <Images className="h-5 w-5" aria-hidden />
                         ) : (
                           <Play className="h-5 w-5 fill-current" aria-hidden />
                         )}
