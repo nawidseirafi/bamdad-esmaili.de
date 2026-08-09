@@ -27,6 +27,11 @@ const emailDomainParts = ["bamdad", "-", "esmaili", ".", "de"];
 
 const getEmailAddress = () => `${emailUserParts.join("")}@${emailDomainParts.join("")}`;
 
+const primaryButtonClass =
+  "inline-flex min-h-11 items-center justify-center rounded-md border border-primary/20 bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-xl shadow-primary/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-primary/30 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+const secondaryButtonClass =
+  "inline-flex min-h-11 items-center justify-center rounded-md border border-white/20 bg-background/35 px-6 py-3 text-sm font-semibold text-foreground backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/45 hover:bg-secondary/85 active:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+
 const HERO_IMAGE = assetPath("media/bamdad-esmaili.webp");
 const HERO_BACKGROUND = assetPath("hero.png");
 const CONTACT_BACKGROUND = assetPath("journalist-studio-hero.png");
@@ -353,15 +358,15 @@ function Index() {
 
       <main id="top">
         {/* Hero */}
-        <section className="relative min-h-[calc(100svh-73px)] overflow-hidden">
+        <section className="relative min-h-[calc(100svh-73px)] overflow-hidden md:min-h-[calc(100svh-73px)]">
           <img
             src={HERO_BACKGROUND}
             alt=""
             aria-hidden
-            className="absolute inset-0 h-full w-full object-cover object-center"
+            className="absolute inset-0 h-full w-full object-cover object-[74%_center] md:object-center"
           />
           <div
-            className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/48 via-background/10 via-42% to-background/20"
+            className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/72 via-background/32 via-58% to-background/18 md:from-background/48 md:via-background/10 md:via-42% md:to-background/20"
             aria-hidden
           />
           <div
@@ -383,13 +388,13 @@ function Index() {
               <div className="mt-10 flex flex-wrap gap-3">
                 <a
                   href="#arbeit"
-                  className="rounded-sm bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+                  className={primaryButtonClass}
                 >
                   Arbeiten ansehen
                 </a>
                 <a
                   href="#kontakt"
-                  className="rounded-sm border border-white/20 bg-background/25 px-6 py-3 text-sm font-medium backdrop-blur transition-colors hover:bg-secondary"
+                  className={secondaryButtonClass}
                 >
                   Kontakt
                 </a>
@@ -603,7 +608,7 @@ function Index() {
                 <button
                   type="button"
                   onClick={() => setIsGalleryExpanded((expanded) => !expanded)}
-                  className="rounded-sm border border-white/20 bg-background/25 px-6 py-3 text-sm font-medium backdrop-blur transition-colors hover:bg-secondary"
+                  className={secondaryButtonClass}
                 >
                   {isGalleryExpanded ? "Weniger anzeigen" : "Mehr anzeigen"}
                 </button>
@@ -706,7 +711,7 @@ function Index() {
               Für Anfragen zu Reportagen, Interviews, Moderationen oder Kooperationen:
             </p>
             <EmailLink
-              className="mt-10 inline-block rounded-sm bg-primary px-8 py-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+              className={`mt-10 ${primaryButtonClass} px-8 py-4`}
             />
             <SocialLinks className="mx-auto mt-8 justify-center lg:hidden" />
             <div className="mt-8 flex flex-wrap justify-center gap-x-5 gap-y-2">
@@ -996,7 +1001,7 @@ function MediaViewer({
                         href={item.url}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-2 rounded-sm bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+                        className={`${primaryButtonClass} min-h-10 gap-2 px-4 py-2`}
                       >
                         <ExternalLink className="h-4 w-4" aria-hidden />
                         Live-Artikel
@@ -1005,7 +1010,7 @@ function MediaViewer({
                         href={item.screenshot}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex items-center gap-2 rounded-sm border border-white/20 bg-background/25 px-4 py-2 text-sm font-medium backdrop-blur transition-colors hover:bg-secondary"
+                        className={`${secondaryButtonClass} min-h-10 gap-2 px-4 py-2`}
                       >
                         <Archive className="h-4 w-4" aria-hidden />
                         Screenshot
