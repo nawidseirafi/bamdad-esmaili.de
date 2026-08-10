@@ -395,6 +395,8 @@ function Index({ initialGalleryFiles = [] }: IndexProps) {
             <div className="max-w-[42rem]">
               <p className="label-eyebrow text-primary">Journalist · Reporter · Moderator</p>
               <h1 className="mt-5 text-[3.35rem] leading-[0.9] tracking-tight drop-shadow-2xl sm:text-7xl lg:mt-6 lg:text-[6.5rem]">
+                Ich bin
+                <br />
                 <span className="block italic text-primary sm:inline">Bamdad</span>
                 <span className="block sm:inline">Esmaili</span>
                 <span className="sr-only"> - deutsch-iranischer Journalist, Reporter und Moderator</span>
