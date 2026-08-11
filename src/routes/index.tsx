@@ -192,25 +192,130 @@ type GalleryImageData = {
   className: string;
 };
 
+type MediaManifestItem = {
+  file?: string;
+  title?: string;
+  url?: string;
+  meta?: string;
+};
+
+type AudioItem = {
+  title: string;
+  meta: string;
+  src: string;
+  type: "audio";
+};
+
+const MEDIA_MANIFEST_URL = assetPath("media-manifest.php");
 const GALLERY_JSON_URL = assetPath("media/galerie/gallery.json");
 
 const isGalleryFile = (item: unknown): item is string => typeof item === "string";
 
-const titleFromGalleryFile = (file: string) =>
-  file
+const titleFromFilePart = (part: string) =>
+  part
     .replace(/\.[^.]+$/, "")
-    .split("-")
+    .replace(/^\d+[\s_-]+/, "")
+    .split(/[-_]+/)
     .filter(Boolean)
     .map((word) => word.charAt(0).toLocaleUpperCase("de-DE") + word.slice(1))
     .join(" ");
 
-const toGalleryImages = (files: string[]): GalleryImageData[] =>
-  files.map((file, index) => ({
-    title: titleFromGalleryFile(file),
-    context: "Galerie",
-    img: assetPath(`media/galerie/${file}`),
-    className: index % 11 === 0 ? "sm:col-span-2" : index % 7 === 0 ? "md:col-span-2" : "",
-  }));
+const applyTitleFixes = (title: string) =>
+  title
+    .replace(/\bMuenchen\b/g, "München")
+    .replace(/\bSaenger\b/g, "Sänger")
+    .replace(/\bGefluechteter\b/g, "Geflüchteter")
+    .replace(/\bBundespraesidenten\b/g, "Bundespräsidenten")
+    .replace(/\bUeber\b/g, "Über")
+    .replace(/\b1live\b/gi, "1LIVE")
+    .replace(/\bWdr\b/g, "WDR")
+    .replace(/\bCosmo\b/g, "COSMO");
+
+const splitFileNameParts = (file: string) => {
+  const name = file.replace(/\.[^.]+$/, "").replace(/^\d+[\s_-]+/, "");
+  const [titlePart, sourcePart] = name.split("--", 2);
+
+  return { titlePart, sourcePart };
+};
+
+const toDisplayTitle = (file: string) => {
+  const { titlePart } = splitFileNameParts(file);
+  const normalizedFile = titlePart.toLocaleLowerCase("de-DE");
+  const compactFile = normalizedFile.replace(/[^a-z0-9]/g, "");
+
+  if (compactFile.includes("fraulebenfreiheitdierevolutionimiran")) {
+    return "Frau, Leben, Freiheit: Die Revolution im Iran";
+  }
+
+  return applyTitleFixes(titleFromFilePart(titlePart));
+};
+
+const toDisplayMeta = (file: string, fallback = "Radio-Beitrag") => {
+  const { sourcePart } = splitFileNameParts(file);
+
+  if (!sourcePart) {
+    return fallback;
+  }
+
+  return applyTitleFixes(titleFromFilePart(sourcePart));
+};
+
+const toGalleryImages = (items: Array<string | MediaManifestItem>): GalleryImageData[] =>
+  items.map((item, index) => {
+    const file = typeof item === "string" ? item : item.file;
+    const title = typeof item === "string" ? toDisplayTitle(item) : item.title || toDisplayTitle(file || "");
+    const img = typeof item === "string" || !item.url ? assetPath(`media/galerie/${file}`) : item.url;
+
+    return {
+      title,
+      context: "Galerie",
+      img,
+      className: index % 11 === 0 ? "sm:col-span-2" : index % 7 === 0 ? "md:col-span-2" : "",
+    };
+  }).filter((image) => Boolean(image.img));
+
+const toRadioItems = (items: Array<string | MediaManifestItem>): AudioItem[] =>
+  items.map((item) => {
+    const file = typeof item === "string" ? item : item.file;
+    const title = typeof item === "string" ? toDisplayTitle(item) : item.title || toDisplayTitle(file || "");
+    const src = typeof item === "string" || !item.url ? assetPath(`media/Radio/${file}`) : item.url;
+
+    return {
+      title,
+      meta:
+        typeof item === "string"
+          ? toDisplayMeta(item)
+          : item.meta || toDisplayMeta(file || "", "Radio-Beitrag"),
+      src,
+      type: "audio" as const,
+    };
+  }).filter((item) => Boolean(item.src));
+
+const fetchJson = async (url: string) => {
+  const response = await fetch(url, { cache: "no-store" });
+
+  if (!response.ok) {
+    throw new Error(`Could not load ${url}: ${response.status}`);
+  }
+
+  return response.json();
+};
+
+const fetchMediaManifest = async (type: "gallery" | "radio") => {
+  const url = `${MEDIA_MANIFEST_URL}?type=${type}`;
+  const items = await fetchJson(url);
+
+  if (!Array.isArray(items)) {
+    throw new Error(`${url} must return an array`);
+  }
+
+  return items as MediaManifestItem[];
+};
+
+const initialRadioItems: AudioItem[] = mediaCollections.radio.items.map((item) => ({
+  ...item,
+  type: "audio" as const,
+}));
 
 const INITIAL_GALLERY_COUNT = 5;
 
@@ -311,6 +416,7 @@ function Index({ initialGalleryFiles = [] }: IndexProps) {
   const [galleryImages, setGalleryImages] = useState<GalleryImageData[]>(
     toGalleryImages(initialGalleryFiles),
   );
+  const [radioItems, setRadioItems] = useState<AudioItem[]>(initialRadioItems);
   const [selectedGalleryIndex, setSelectedGalleryIndex] = useState<number | null>(null);
   const [selectedMedia, setSelectedMedia] = useState<MediaKey | null>(null);
   const visibleGalleryImages = isGalleryExpanded
@@ -320,21 +426,29 @@ function Index({ initialGalleryFiles = [] }: IndexProps) {
   useEffect(() => {
     let isMounted = true;
 
-    fetch(GALLERY_JSON_URL, { cache: "no-store" })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Could not load gallery JSON: ${response.status}`);
-        }
-
-        return response.json();
-      })
+    fetchMediaManifest("gallery")
+      .catch(() => fetchJson(GALLERY_JSON_URL))
       .then((items: unknown) => {
         if (!Array.isArray(items)) {
-          throw new Error("Gallery JSON must be an array");
+          throw new Error("Gallery data must be an array");
         }
 
         if (isMounted) {
-          setGalleryImages(toGalleryImages(items.filter(isGalleryFile)));
+          const validItems = items.filter(
+            (item): item is string | MediaManifestItem =>
+              isGalleryFile(item) || (typeof item === "object" && item !== null),
+          );
+          setGalleryImages(toGalleryImages(validItems));
+        }
+      })
+      .catch((error) => {
+        console.warn(error);
+      });
+
+    fetchMediaManifest("radio")
+      .then((items) => {
+        if (isMounted) {
+          setRadioItems(toRadioItems(items));
         }
       })
       .catch((error) => {
@@ -760,7 +874,11 @@ function Index({ initialGalleryFiles = [] }: IndexProps) {
         selectedIndex={selectedGalleryIndex}
         onSelectedIndexChange={setSelectedGalleryIndex}
       />
-      <MediaViewer selectedMedia={selectedMedia} onSelectedMediaChange={setSelectedMedia} />
+      <MediaViewer
+        selectedMedia={selectedMedia}
+        radioItems={radioItems}
+        onSelectedMediaChange={setSelectedMedia}
+      />
 
       <footer className="relative z-20 border-t border-border bg-background">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-8 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
@@ -968,9 +1086,11 @@ function GalleryViewer({
 
 function MediaViewer({
   selectedMedia,
+  radioItems,
   onSelectedMediaChange,
 }: {
   selectedMedia: MediaKey | null;
+  radioItems: AudioItem[];
   onSelectedMediaChange: (media: MediaKey | null) => void;
 }) {
   const open = selectedMedia !== null;
@@ -1075,7 +1195,7 @@ function MediaViewer({
           </div>
         ) : (
           <div className="grid gap-px bg-border">
-            {mediaCollections.radio.items.map((item, index) => (
+            {radioItems.map((item, index) => (
               <article
                 key={item.src}
                 className="grid gap-4 bg-background px-5 py-5 sm:grid-cols-[4rem_1fr] sm:items-center sm:px-6"
