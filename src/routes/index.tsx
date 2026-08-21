@@ -36,6 +36,7 @@ const HERO_IMAGE = assetPath("media/bamdad-esmaili.webp");
 const HERO_BACKGROUND = assetPath("hero.png");
 const HERO_MOBILE_BACKGROUND = assetPath("hero-mobile.png");
 const CONTACT_BACKGROUND = assetPath("journalist-studio-hero.png");
+const CONTACT_PORTRAIT = assetPath("media/bamdad-contact.png");
 const PORTRAIT_IMAGE = assetPath("media/portfolio/bamdad-esmaili-portrait.jpg");
 
 const skills = [
@@ -835,12 +836,19 @@ function Index({ initialGalleryFiles = [] }: IndexProps) {
             loading="lazy"
             className="absolute inset-0 h-full w-full object-cover object-center opacity-55 saturate-90"
           />
+          <img
+            src={CONTACT_PORTRAIT}
+            alt=""
+            aria-hidden
+            loading="lazy"
+            className="pointer-events-none absolute bottom-0 left-0 z-[1] hidden h-[92%] w-auto max-w-[38vw] object-contain object-bottom lg:block"
+          />
           <div className="pointer-events-none absolute inset-0 bg-background/46" aria-hidden />
           <div
             className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,transparent_0%,rgba(0,0,0,0.18)_62%,rgba(0,0,0,0.62)_100%)]"
             aria-hidden
           />
-          <div className="relative mx-auto max-w-6xl px-6 py-28 text-center">
+          <div className="relative z-10 mx-auto max-w-6xl px-6 py-28 text-center">
             <p className="label-eyebrow text-primary">Kontakt</p>
             <h2 className="mx-auto mt-6 max-w-3xl text-4xl leading-tight sm:text-6xl">
               Eine Geschichte, die erzählt werden muss?
